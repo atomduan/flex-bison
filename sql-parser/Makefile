@@ -43,7 +43,7 @@ fbs_sql_parser.o:	$(BUILD_DEPS)
 
 .PHONY:clean
 clean:
-	rm -rf *.o *.bin core *.tab.* fbs_yy_gen.h states.report automaton.dot automaton.svg *.output
+	rm -rf *.o *.bin core *.tab.* fbs_yy_gen.h states.report automaton.dot automaton.svg *.output fbs_sql_lex.yy.c
 
 .PHONY:clean-build
 clean-build:
