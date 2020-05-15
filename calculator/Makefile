@@ -11,27 +11,34 @@ BUILD_INCS=-I ./
 
 fbs_parser: fbs_cal.tab.o \
     fbs_cal_lex.o \
-	lex.yy.o \
+	fbs_cal_lex.yy.o \
 	fbs_cal_parser.o
 	$(LINK) -o fbs_cal_parser.bin fbs_cal.tab.o \
 	fbs_cal_lex.o \
-	lex.yy.o \
+	fbs_cal_lex.yy.o \
 	fbs_cal_parser.o \
 	-ldl -lpthread -lm -Wl $(LDFLAGS)
 
 fbs_cal.tab.c:
-	$(BISON) -v -Wmidrule-value -Wno-other --debug --report=states,lookaheads --report-file=states.report --graph=automaton.dot -d fbs_cal.y
+	$(BISON) -v -d\
+		-Wmidrule-value \
+		-Wno-other \
+		--debug \
+		--report=states,lookaheads \
+		--report-file=states.report \
+		--graph=automaton.dot \
+		fbs_cal.y
 
-lex.yy.c:
-	$(FLEX) fbs_cal.l
+fbs_cal_lex.yy.c:
+	$(FLEX) --outfile=fbs_cal_lex.yy.c fbs_cal.l
 
 fbs_cal.tab.o: $(BUILD_DEPS)  \
     fbs_cal.tab.c
 	$(CC) $(CFLAGS) $(BUILD_INCS) -o fbs_cal.tab.o fbs_cal.tab.c
 
-lex.yy.o: $(BUILD_DEPS)  \
-    lex.yy.c
-	$(CC) $(CFLAGS) $(BUILD_INCS) -o lex.yy.o lex.yy.c
+fbs_cal_lex.yy.o: $(BUILD_DEPS)  \
+    fbs_cal_lex.yy.c
+	$(CC) $(CFLAGS) $(BUILD_INCS) -o fbs_cal_lex.yy.o fbs_cal_lex.yy.c
 
 fbs_cal_lex.o:	$(BUILD_DEPS)
 	$(CC) $(CFLAGS) $(BUILD_INCS) -o fbs_cal_lex.o fbs_cal_lex.c
@@ -41,7 +48,7 @@ fbs_cal_parser.o:	$(BUILD_DEPS)
 
 .PHONY:clean
 clean:
-	rm -rf *.o *.bin core *.tab.* fbs_yy_gen.h states.report automaton.dot automaton.svg *.output lex.yy.c
+	rm -rf *.o *.bin core *.tab.* fbs_yy_gen.h states.report automaton.dot automaton.svg *.output fbs_cal_lex.yy.c
 
 .PHONY:clean-build
 clean-build:
