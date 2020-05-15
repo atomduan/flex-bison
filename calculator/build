@@ -1,0 +1,13 @@
+#!/bin/bash -
+curr=$(cd `dirname $(which $0)`; pwd)
+
+cd $curr
+make clean
+make
+
+if [ -f "automaton.dot" ]; then
+    if [ -f "automaton.svg" ]; then
+        rm automaton.svg
+    fi
+    #dot -T svg automaton.dot > automaton.svg
+fi
