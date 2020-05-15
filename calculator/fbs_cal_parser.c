@@ -12,9 +12,3 @@ main(int argc,char **argv)
     init_lexer();
     return yyparse();
 }
-
-int init_parser()
-{
-    /*do noting*/
-    return 0;
-}

@@ -64,12 +64,12 @@ input:
 
 line:
     '\n'
-|   exp '\n'                        { printf("%.10g\n", $1); }
-|   error '\n'                      { yyerrok; }
+|   exp '\n'                        {   printf("%.10g\n", $1);  }
+|   error '\n'                      {   yyerrok;    }
 ;
 
 exp:
-    NUM                             { $$ = $1; }
+    NUM                             {   $$ = $1;    }
 |   VAR[var]                        { 
                                         if ($[var]->has_init == 1) {
                                             $$ = $[var]->value.var; 
@@ -83,10 +83,10 @@ exp:
                                         $[var]->value.var = $3;
                                         $[var]->has_init = 1;
                                     }
-|   FNCT[func] '(' exp ')'          { $$ = (*($[func]->value.fnctptr))($3); }
-|   exp[left] '+' exp[right]        { $$ = $[left] + $[right]; }
-|   exp[left] '-' exp[right]        { $$ = $[left] - $[right]; }
-|   exp[left] '*' exp[right]        { $$ = $[left] * $[right]; }
+|   FNCT[func] '(' exp ')'          {   $$ = (*($[func]->value.fnctptr))($3);   }
+|   exp[left] '+' exp[right]        {   $$ = $[left] + $[right];    }
+|   exp[left] '-' exp[right]        {   $$ = $[left] - $[right];    }
+|   exp[left] '*' exp[right]        {   $$ = $[left] * $[right];    }
 |   exp[left] '/' exp[right]        { 
                                         if ($[right] != 0) {
                                             $$ = $[left] / $[right];
@@ -98,9 +98,9 @@ exp:
                                             yyerror(yylsp,"zero error\n");
                                         }
                                     }
-|   '-' exp %prec NEG               { $$ = -$2; }
-|   exp[base] '^' exp[factor]       { $$ =  pow($[base],$[factor]); }
-|   '(' exp ')'                     { $$ =  $2; }
+|   '-' exp %prec NEG               {   $$ = -$2;   }
+|   exp[base] '^' exp[factor]       {   $$ =  pow($[base],$[factor]);   }
+|   '(' exp ')'                     {   $$ =  $2;   }
 ;
 %%
 
@@ -109,6 +109,6 @@ exp:
 /* Epilogue Begin */
 void yyerror(YYLTYPE *yylsp, char const *msg)
 {
-    USE(yylsp);
+    FBS_USE(yylsp);
     fprintf(stderr,"%s\n",msg);
 }

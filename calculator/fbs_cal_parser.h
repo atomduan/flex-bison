@@ -28,7 +28,7 @@
 
 extern char **environ;
 
-#define USE(VALUE) /*empty*/
+#define FBS_USE(VALUE) /*empty*/
 
 /* Function type.  */
 typedef double (*func_t)(double);
