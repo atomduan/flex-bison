@@ -2,11 +2,12 @@ CC=clang
 CFLAGS=-c -pipe -O0 -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g
 LDFLAGS=-L/usr/local/opt/bison/lib
 
-LINK = $(CC)
-BISON = /usr/local/opt/bison/bin/bison
+BISON=/usr/local/opt/bison/bin/bison
+FLEX=/usr/bin/flex
 
-BUILD_DEPS = ./fbs_cal_parser.h  
-BUILD_INCS = -I ./
+LINK=$(CC)
+BUILD_DEPS=./fbs_cal_parser.h  
+BUILD_INCS=-I ./
 
 fbs_parser: fbs_cal.tab.o \
     fbs_cal_lex.o \
@@ -22,7 +23,7 @@ fbs_cal.tab.c:
 	$(BISON) -v -Wmidrule-value -Wno-other --debug --report=states,lookaheads --report-file=states.report --graph=automaton.dot -d fbs_cal.y
 
 lex.yy.c:
-	flex fbs_cal.l
+	$(FLEX) fbs_cal.l
 
 fbs_cal.tab.o: $(BUILD_DEPS)  \
     fbs_cal.tab.c
@@ -42,5 +43,6 @@ fbs_cal_parser.o:	$(BUILD_DEPS)
 clean:
 	rm -rf *.o *.bin core *.tab.* fbs_yy_gen.h states.report automaton.dot automaton.svg *.output lex.yy.c
 
+.PHONY:clean-build
 clean-build:
 	rm -rf *.o *.bin
