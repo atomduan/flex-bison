@@ -3,10 +3,7 @@
 #include <fbs_sql_parser.h>
 #define YYDEBUG 1
 }/*code top end*/
-/** 
- * writing dependency code for YYSTYPE and YYLTYPE, 
- * should prefer %code requires over %code top
- */
+
 %code requires {
 #define YYLTYPE YYLTYPE
 typedef struct YYLTYPE {
@@ -23,6 +20,7 @@ union YYSTYPE {
     int subtok;
 };
 }/*code requires end*/
+
 %code {
 int yylex(YYSTYPE *lvalp, YYLTYPE *llocp);
 void yyerror(YYLTYPE *yylsp, char const *msg);
@@ -40,7 +38,6 @@ void yyerror(YYLTYPE *yylsp, char const *msg);
 %token INTNUM APPROXNUM
 
 /* operators */
-
 %left OR
 %left AND
 %left NOT
