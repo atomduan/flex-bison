@@ -1,4 +1,5 @@
 %option nounput noinput noyywrap
+%option stack
 
 %{
 #include <fbs_sql_parser.h>
