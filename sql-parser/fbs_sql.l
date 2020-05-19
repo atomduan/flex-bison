@@ -1,5 +1,7 @@
 %option nounput noinput noyywrap
-%option stack
+%option warn nodefault
+%option yylineno
+%option outfile="fbs_sql_lex.yy.c"
 
 %{
 #include <fbs_sql_parser.h>
