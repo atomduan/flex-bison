@@ -30,7 +30,7 @@ fbs_cal.tab.c:
 		fbs_cal.y
 
 fbs_cal_lex.yy.c:
-	$(FLEX) --outfile=fbs_cal_lex.yy.c fbs_cal.l
+	$(FLEX) fbs_cal.l
 
 fbs_cal.tab.o: $(BUILD_DEPS)  \
     fbs_cal.tab.c

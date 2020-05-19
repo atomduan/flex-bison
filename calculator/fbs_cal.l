@@ -1,4 +1,7 @@
 %option nounput noinput noyywrap
+%option warn nodefault
+%option yylineno
+%option outfile="fbs_cal_lex.yy.c"
 
 %{
 #include <fbs_cal_parser.h>
