@@ -1,5 +1,4 @@
 #include <fbs_sql_parser.h>
-#include <fbs_yy_gen.h>
 
 int
 main(int argc,char **argv)
@@ -9,5 +8,5 @@ main(int argc,char **argv)
     for (i = 1; i < argc; ++i)
         if (strcmp(argv[i],"-x") == 0)
             yydebug = 1;
-    return yyparse();
+    yyparse();
 }

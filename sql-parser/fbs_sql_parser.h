@@ -1,4 +1,5 @@
 #ifndef FBS_SQL_PARSER
+#define FBS_SQL_PARSER
 
 #define _FILE_OFFSET_BITS  64
 
@@ -26,7 +27,11 @@
 #include <libgen.h>
 #include <dlfcn.h>
 
+#include <fbs_yy_gen.h>
+
 extern char **environ;
 
 #define FBS_USE(VALUE) /*empty*/
+
+
 #endif/*FBS_SQL_PARSER*/

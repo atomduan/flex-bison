@@ -22,8 +22,8 @@ union YYSTYPE {
 }/*code requires end*/
 
 %code {
-int yylex(YYSTYPE *lvalp, YYLTYPE *llocp);
-void yyerror(YYLTYPE *yylsp, char const *msg);
+int yylex();
+void yyerror(char const *msg);
 }/*code end*/
 
 
@@ -31,7 +31,6 @@ void yyerror(YYLTYPE *yylsp, char const *msg);
 /* Declarations Section */
 %defines "fbs_yy_gen.h"
 %define api.value.type {union YYSTYPE}
-%define api.pure full 
 
 %token NAME
 %token STRING
@@ -64,6 +63,8 @@ void yyerror(YYLTYPE *yylsp, char const *msg);
 %destructor { printf("destructor subtok, do nothing.\n"); } <subtok>
 %destructor { printf("Discarding tagless symbol.\n"); } <>
 %destructor { free($$); } <*>
+
+%glr-parser
 
 /* --------------------------------------------------------------------- */
 /* Grammar Rules Section */ 
@@ -656,8 +657,7 @@ when_action:    GOTO NAME
 
 /* --------------------------------------------------------------------- */
 /* Epilogue Begin */
-void yyerror(YYLTYPE *yylsp, char const *msg)
+void yyerror(char const *msg)
 {
-    FBS_USE(yylsp);
     fprintf(stderr,"%s\n",msg);
 }

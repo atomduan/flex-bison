@@ -9,8 +9,10 @@ LINK=$(CC)
 BUILD_DEPS=./fbs_sql_parser.h  
 BUILD_INCS=-I ./
 
-fbs_parser: fbs_sql.tab.o \
+fbs_parser: fbs_sql_lex.yy.c \
+	fbs_sql.tab.c \
 	fbs_sql_lex.yy.o \
+	fbs_sql.tab.o \
 	fbs_sql_parser.o
 	$(LINK) -o fbs_sql_parser.bin fbs_sql.tab.o \
 	fbs_sql_lex.yy.o \
@@ -30,12 +32,10 @@ fbs_sql.tab.c:
 fbs_sql_lex.yy.c:
 	$(FLEX) --outfile=fbs_sql_lex.yy.c fbs_sql.l
 
-fbs_sql.tab.o: $(BUILD_DEPS)  \
-    fbs_sql.tab.c
+fbs_sql.tab.o: $(BUILD_DEPS)
 	$(CC) $(CFLAGS) $(BUILD_INCS) -o fbs_sql.tab.o fbs_sql.tab.c
 
-fbs_sql_lex.yy.o: $(BUILD_DEPS)  \
-    fbs_sql_lex.yy.c
+fbs_sql_lex.yy.o: $(BUILD_DEPS)
 	$(CC) $(CFLAGS) $(BUILD_INCS) -o fbs_sql_lex.yy.o fbs_sql_lex.yy.c
 
 fbs_sql_parser.o:	$(BUILD_DEPS)
