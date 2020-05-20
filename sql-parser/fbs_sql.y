@@ -46,7 +46,7 @@ void yyerror(char const *msg);
 %nonassoc UMINUS
 
 /* literal keyword tokens */
-%token ALL AMMSC ANY    BETWEEN BY
+%token ALL AMMSC ANY BETWEEN BY
 %token DELETE DISTINCT 
 %token ESCAPE EXISTS FROM 
 %token GROUP HAVING IN INDICATOR INSERT INTO
