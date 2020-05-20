@@ -1,5 +1,5 @@
 %option nounput noinput noyywrap
-%option warn nodefault
+%option warn nodefault debug verbose
 %option yylineno
 %option outfile="fbs_sql_lex.yy.c"
 
