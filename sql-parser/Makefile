@@ -30,7 +30,7 @@ fbs_sql.tab.c:
 		fbs_sql.y
 
 fbs_sql_lex.yy.c:
-	$(FLEX) --outfile=fbs_sql_lex.yy.c fbs_sql.l
+	$(FLEX) fbs_sql.l
 
 fbs_sql.tab.o: $(BUILD_DEPS)
 	$(CC) $(CFLAGS) $(BUILD_INCS) -o fbs_sql.tab.o fbs_sql.tab.c
