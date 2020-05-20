@@ -1,7 +1,7 @@
 %option warn nodefault debug verbose
 %option nounput noinput noyywrap
 %option yylineno
-
+/*Comment Me...*/
 %option outfile="fbs_sql_lex.yy.c"
 
 %{
