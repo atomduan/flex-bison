@@ -15,10 +15,10 @@ typedef struct YYLTYPE {
     char *filename;
 } YYLTYPE; 
 union YYSTYPE {
-    int intval;
-    double floatval;
-    char *strval;
-    int subtok;
+    int     intval;
+    double  floatval;
+    char   *strval;
+    int     subtok;
 };
 /* TODO:FLEX hecked! fbs_sql_lex.yy.h dup here!! need fix */
 #ifndef YY_TYPEDEF_YY_SCANNER_T
@@ -58,13 +58,13 @@ void yyerror(YYLTYPE *yylsp, char const *msg, yyscan_t yyscanner);
 
 /* literal keyword tokens */
 %token ALL AMMSC ANY BETWEEN BY
-%token DELETE DISTINCT 
+%token DISTINCT 
 %token ESCAPE EXISTS FROM 
-%token GROUP HAVING IN INDICATOR INSERT INTO
+%token GROUP HAVING IN INDICATOR INTO
 %token IS LIKE NULLX 
-%token SELECT SET
+%token SELECT
 %token SOME 
-%token UPDATE USER VALUES WHERE 
+%token USER WHERE 
 
 %destructor { printf("destructor intval, do nothing.\n"); } <intval>
 %destructor { printf("destructor floatval, do nothing.\n"); } <floatval>

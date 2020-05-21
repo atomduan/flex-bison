@@ -13,7 +13,8 @@
 #include <fbs_yy_gen.h>
 %}
 
-ANY_OTHER       .|\n
+ANY_OTHER           .|\n
+CMP_PT              (=|<>|<|>|<=|>=)
 
 %%
 "NAME"                  {   return NAME;            }
@@ -25,7 +26,6 @@ ANY_OTHER       .|\n
 "ANY"                   {   return ANY;             }
 "BETWEEN"               {   return BETWEEN;         }
 "BY"                    {   return BY;              }
-"DELETE"                {   return DELETE;          }
 "DISTINCT"              {   return DISTINCT;        }
 "ESCAPE"                {   return ESCAPE;          }
 "EXISTS"                {   return EXISTS;          }
@@ -34,17 +34,20 @@ ANY_OTHER       .|\n
 "HAVING"                {   return HAVING;          }
 "IN"                    {   return IN;              }
 "INDICATOR"             {   return INDICATOR;       }
-"INSERT"                {   return INSERT;          }
 "INTO"                  {   return INTO;            }
 "IS"                    {   return IS;              }
 "LIKE"                  {   return LIKE;            }
 "NULLX"                 {   return NULLX;           }
 "SELECT"                {   return SELECT;          }
-"SET"                   {   return SET;             }
 "SOME"                  {   return SOME;            }
-"UPDATE"                {   return UPDATE;          }
 "USER"                  {   return USER;            }
-"VALUES"                {   return VALUES;          }
 "WHERE"                 {   return WHERE;           }
+"OR"                    {   return OR;              }
+"AND"                   {   return AND;             }
+"NOT"                   {   return NOT;             }
+
+{CMP_PT}                {   yylval_param->subtok = (int)*yytext;
+                            return COMPARISON;      }
+
 {ANY_OTHER}             {   return (int)*yytext;    }
 %%
