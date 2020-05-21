@@ -20,18 +20,14 @@ union YYSTYPE {
     char *strval;
     int subtok;
 };
-
-/* An opaque pointer. TODO, hecked yy.h here!!*/
+/* TODO:FLEX hecked! fbs_sql_lex.yy.h dup here!! need fix */
 #ifndef YY_TYPEDEF_YY_SCANNER_T
 #define YY_TYPEDEF_YY_SCANNER_T
 typedef void* yyscan_t;
 #endif
-
 }/*code requires end*/
 
 %code {
-/*TODO hecked yy.h here*/
-#include <fbs_sql_lex.yy.h>
 int yylex(YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner);
 void yyerror(YYLTYPE *yylsp, char const *msg, yyscan_t yyscanner);
 }/*code end*/

@@ -10,7 +10,6 @@ main(int argc,char **argv)
     for (i = 1; i < argc; ++i)
         if (strcmp(argv[i],"-x") == 0)
             yydebug = 1;
-
     /*reentrant invoke, for every scanner is thread safe*/
     yyscan_t scanner;
     yylex_init(&scanner);
