@@ -41,5 +41,8 @@ struct fbs_ctx_s {
     yyscan_t yyscanner;
 }; 
 typedef fbs_ctx_t* fbs_ctx;
-int fbs_ctx_init(fbs_ctx fbsctx, yyscan_t scanner);
+
+int do_yyparse();
+fbs_ctx fbs_ctx_init();
+int fbs_ctx_desctroy(fbs_ctx fbsctx);
 #endif/*FBS_SQL_PARSER*/

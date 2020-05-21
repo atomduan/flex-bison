@@ -2,8 +2,6 @@
 #include <fbs_yy_gen.h>
 #include <fbs_sql_lex.yy.h>
 
-static int do_yyparse();
-
 int
 main(int argc,char **argv)
 {
@@ -16,22 +14,32 @@ main(int argc,char **argv)
 }
 
 /*reentrant invoke, for every scanner is thread safe*/
-static int do_yyparse()
+int do_yyparse()
 {
-    //init context
-    fbs_ctx fbsctx = malloc(sizeof(fbs_ctx_t));
-    yyscan_t scanner;
-    yylex_init(&scanner);
-    fbs_ctx_init(fbsctx,scanner);
-    ///invoke parse
+    fbs_ctx fbsctx = fbs_ctx_init();
     yyparse(fbsctx);
-    yylex_destroy(scanner);
-    free(fbsctx);
+    fbs_ctx_desctroy(fbsctx);
     return 0;
 }
 
-int fbs_ctx_init(fbs_ctx fbsctx, yyscan_t scanner)
+fbs_ctx fbs_ctx_init()
 {
-    fbsctx->yyscanner = scanner;
-    return 0;    
+    yyscan_t yyscanner;
+    yylex_init(&yyscanner);
+    fbs_ctx fbsctx = malloc(sizeof(fbs_ctx_t));
+    fbsctx->yyscanner = yyscanner;
+    return fbsctx;    
 }
+
+int fbs_ctx_desctroy(fbs_ctx fbsctx)
+{
+    if (fbsctx != NULL) {
+        yyscan_t yyscanner = fbsctx->yyscanner;
+        if (yyscanner != NULL) {
+            yylex_destroy(yyscanner);
+        }
+        free(fbsctx);
+    }
+    return 0;
+}
+
