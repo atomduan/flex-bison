@@ -42,7 +42,7 @@ struct fbs_ctx_s {
 }; 
 typedef fbs_ctx_t* fbs_ctx;
 
-int do_yyparse();
+int reentrant_yyparse();
 fbs_ctx fbs_ctx_init();
 int fbs_ctx_desctroy(fbs_ctx fbsctx);
 #endif/*FBS_SQL_PARSER*/
