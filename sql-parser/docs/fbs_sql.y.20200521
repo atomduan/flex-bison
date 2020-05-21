@@ -75,7 +75,6 @@ void yyerror(YYLTYPE *yylsp, char const *msg, yyscan_t yyscanner);
 /* --------------------------------------------------------------------- */
 /* Grammar Rules Section */ 
 %%
-/* --------- LV0 --------- */
 sql_list:
     |   sql ';'                     {  
                                         /*useless, without this stmt yyerror with gen error with pure api */
@@ -89,7 +88,18 @@ sql:    manipulative_statement
 
 manipulative_statement:
         /* empty */
+    |   delete_statement_searched
+    |   insert_statement
     |   select_statement
+    |   update_statement_searched
+    ;
+
+delete_statement_searched:
+        DELETE FROM table opt_where_clause
+    ;
+
+insert_statement:
+        INSERT INTO table opt_column_commalist values_or_query_spec
     ;
 
 select_statement:
@@ -97,11 +107,28 @@ select_statement:
     |   SELECT opt_all_distinct selection table_exp
     ;
 
-/* --------- LV1 --------- */
-opt_all_distinct:
+update_statement_searched:
+        UPDATE table SET assignment_commalist opt_where_clause
+    ;
+
+table:
+        NAME
+    |   NAME '.' NAME
+    ;
+
+opt_where_clause:
         /* empty */
-    |   ALL
-    |   DISTINCT
+    |   where_clause
+    ;
+
+opt_column_commalist:
+        /* empty */
+    |   '(' column_commalist ')'
+    ;
+
+values_or_query_spec:
+        VALUES '(' insert_atom_commalist ')'
+    |   query_spec
     ;
 
 selection:
@@ -121,7 +148,29 @@ table_exp:
         opt_having_clause
     ;
 
-/* --------- LV2 --------- */
+assignment_commalist:
+    |   assignment
+    |   assignment_commalist ',' assignment
+    ;
+
+where_clause:
+        WHERE search_condition
+    ;
+
+column_commalist:
+        column
+    |   column_commalist ',' column
+    ;
+
+insert_atom_commalist:
+        insert_atom
+    |   insert_atom_commalist ',' insert_atom
+    ;
+
+query_spec:
+        SELECT opt_all_distinct selection table_exp
+    ;
+
 scalar_exp_commalist:
         scalar_exp
     |   scalar_exp_commalist ',' scalar_exp
@@ -135,11 +184,6 @@ from_clause:
         FROM table_ref_commalist
     ;
 
-opt_where_clause:
-        /* empty */
-    |   where_clause
-    ;
-
 opt_group_by_clause:
         /* empty */
     |   GROUP BY column_ref_commalist
@@ -150,7 +194,14 @@ opt_having_clause:
     |   HAVING search_condition
     ;
 
-/* --------- LV3 --------- */
+assignment:
+        column '=' scalar_exp
+    |   column '=' NULLX
+    ;
+
+column:     NAME
+    ;
+
 scalar_exp:
         scalar_exp '+' scalar_exp
     |   scalar_exp '-' scalar_exp
@@ -164,6 +215,25 @@ scalar_exp:
     |   '(' scalar_exp ')'
     ;
 
+search_condition:
+    |   search_condition OR search_condition
+    |   search_condition AND search_condition
+    |   NOT search_condition
+    |   '(' search_condition ')'
+    |   predicate
+    ;
+
+insert_atom:
+        atom
+    |   NULLX
+    ;
+
+opt_all_distinct:
+        /* empty */
+    |   ALL
+    |   DISTINCT
+    ;
+
 parameter_ref:
         parameter
     |   parameter parameter
@@ -175,28 +245,21 @@ table_ref_commalist:
     |   table_ref_commalist ',' table_ref
     ;
 
-where_clause:
-        WHERE search_condition
-    ;
-
 column_ref_commalist:
         column_ref
     |   column_ref_commalist ',' column_ref
     ;
 
-search_condition:
-    |   search_condition OR search_condition
-    |   search_condition AND search_condition
-    |   NOT search_condition
-    |   '(' search_condition ')'
-    |   predicate
-    ;
-
-/* --------- LV4 --------- */
 atom:
         parameter_ref
     |   literal
     |   USER
+    ;
+
+column_ref:
+        NAME
+    |   NAME '.' NAME   /* needs semantics */
+    |   NAME '.' NAME '.' NAME
     ;
 
 function_ref:
@@ -204,15 +267,6 @@ function_ref:
     |   AMMSC '(' DISTINCT column_ref ')'
     |   AMMSC '(' ALL scalar_exp ')'
     |   AMMSC '(' scalar_exp ')'
-    ;
-
-parameter:
-        ':' NAME
-    ;
-
-table_ref:
-        table 
-    |   table range_variable
     ;
 
 predicate:
@@ -225,19 +279,19 @@ predicate:
     |   existence_test
     ;
 
-/* --------- LV5 --------- */
+parameter:
+        ':' NAME
+    ;
+
+table_ref:
+        table 
+    |   table range_variable
+    ;
+
 literal:
         STRING
     |   INTNUM
     |   APPROXNUM
-    ;
-
-table:
-        NAME
-    |   NAME '.' NAME
-    ;
-
-range_variable: NAME
     ;
 
 comparison_predicate:
@@ -275,7 +329,9 @@ existence_test:
         EXISTS subquery
     ;
 
-/* --------- LV6 --------- */
+range_variable: NAME
+    ;
+
 subquery:
         '(' SELECT opt_all_distinct selection table_exp ')'
     ;
@@ -283,12 +339,6 @@ subquery:
 opt_escape:
         /* empty */
     |   ESCAPE atom
-    ;
-
-column_ref:
-        NAME
-    |   NAME '.' NAME   /* needs semantics */
-    |   NAME '.' NAME '.' NAME
     ;
 
 atom_commalist:
