@@ -1,6 +1,7 @@
 /* --------------------------------------------------------------------- */
 %code top {
 #include <fbs_sql_parser.h>
+
 #define YYDEBUG 1
 }/*code top end*/
 
@@ -19,11 +20,20 @@ union YYSTYPE {
     char *strval;
     int subtok;
 };
+
+/* An opaque pointer. TODO, hecked yy.h here!!*/
+#ifndef YY_TYPEDEF_YY_SCANNER_T
+#define YY_TYPEDEF_YY_SCANNER_T
+typedef void* yyscan_t;
+#endif
+
 }/*code requires end*/
 
 %code {
-int yylex();
-void yyerror(char const *msg);
+/*TODO hecked yy.h here*/
+#include <fbs_sql_lex.yy.h>
+int yylex(YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner);
+void yyerror(YYLTYPE *yylsp, char const *msg, yyscan_t yyscanner);
 }/*code end*/
 
 
@@ -31,6 +41,11 @@ void yyerror(char const *msg);
 /* Declarations Section */
 %defines "fbs_yy_gen.h"
 %define api.value.type {union YYSTYPE}
+%define api.pure full 
+
+/*to integerat with flex reentran mod*/
+%lex-param      {yyscan_t yyscanner}
+%parse-param    {yyscan_t yyscanner}
 
 %token NAME
 %token STRING
@@ -60,8 +75,6 @@ void yyerror(char const *msg);
 %destructor { printf("destructor subtok, do nothing.\n"); } <subtok>
 %destructor { printf("Discarding tagless symbol.\n"); } <>
 %destructor { free($$); } <*>
-
-%glr-parser
 
 /* --------------------------------------------------------------------- */
 /* Grammar Rules Section */ 
@@ -347,7 +360,9 @@ any_all_some:
 
 /* --------------------------------------------------------------------- */
 /* Epilogue Begin */
-void yyerror(char const *msg)
+void yyerror(YYLTYPE *yylsp, char const *msg, yyscan_t yyscanner)
 {
+    FBS_USE(yylsp); 
+    FBS_USE(yyscanner); 
     fprintf(stderr,"%s\n",msg);
 }

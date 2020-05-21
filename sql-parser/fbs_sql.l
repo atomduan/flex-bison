@@ -1,11 +1,16 @@
 %option warn nodefault debug verbose
 %option nounput noinput noyywrap
 %option yylineno
+%option bison-bridge bison-locations
+%option reentrant
+
 /*Comment Me...*/
 %option outfile="fbs_sql_lex.yy.c"
+%option header-file="fbs_sql_lex.yy.h"
 
 %{
 #include <fbs_sql_parser.h>
+#include <fbs_yy_gen.h>
 %}
 
 ANY_OTHER       .|\n
