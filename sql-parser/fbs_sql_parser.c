@@ -15,21 +15,20 @@ main(int argc,char **argv)
     return do_yyparse();
 }
 
+/*reentrant invoke, for every scanner is thread safe*/
 static int do_yyparse()
 {
-    /*reentrant invoke, for every scanner is thread safe*/
+    //init context
     fbs_ctx fbsctx = malloc(sizeof(fbs_ctx_t));
     yyscan_t scanner;
     yylex_init(&scanner);
     fbs_ctx_init(fbsctx,scanner);
-
     ///invoke parse
     yyparse(fbsctx);
     yylex_destroy(scanner);
     free(fbsctx);
     return 0;
 }
-
 
 int fbs_ctx_init(fbs_ctx fbsctx, yyscan_t scanner)
 {
