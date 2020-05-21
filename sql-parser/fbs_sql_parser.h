@@ -29,4 +29,17 @@
 
 extern char **environ;
 #define FBS_USE(VALUE)
+
+/* TODO:FLEX hecked! fbs_sql_lex.yy.h dup here!! need fix */
+#ifndef YY_TYPEDEF_YY_SCANNER_T
+#define YY_TYPEDEF_YY_SCANNER_T
+typedef void* yyscan_t;
+#endif
+
+typedef struct fbs_ctx_s fbs_ctx_t; 
+struct fbs_ctx_s {
+    yyscan_t yyscanner;
+}; 
+typedef fbs_ctx_t* fbs_ctx;
+int fbs_ctx_init(fbs_ctx fbsctx, yyscan_t scanner);
 #endif/*FBS_SQL_PARSER*/

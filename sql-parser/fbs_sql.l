@@ -4,17 +4,24 @@
 %option bison-bridge bison-locations
 %option reentrant
 
-/*Comment Me...*/
 %option outfile="fbs_sql_lex.yy.c"
 %option header-file="fbs_sql_lex.yy.h"
+
 
 %{
 #include <fbs_sql_parser.h>
 #include <fbs_yy_gen.h>
+#ifndef YY_DECL
+#define YY_DECL_IS_OURS 1
+extern int _yylex (YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner);
+#define YY_DECL int _yylex (YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner)
+#endif
 %}
+
 
 ANY_OTHER           .|\n
 CMP_PT              (=|<>|<|>|<=|>=)
+
 
 %%
 "NAME"                  {   return NAME;            }

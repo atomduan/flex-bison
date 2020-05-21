@@ -20,16 +20,12 @@ union YYSTYPE {
     char   *strval;
     int     subtok;
 };
-/* TODO:FLEX hecked! fbs_sql_lex.yy.h dup here!! need fix */
-#ifndef YY_TYPEDEF_YY_SCANNER_T
-#define YY_TYPEDEF_YY_SCANNER_T
-typedef void* yyscan_t;
-#endif
 }/*code requires end*/
 
 %code {
-int yylex(YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner);
-void yyerror(YYLTYPE *yylsp, char const *msg, yyscan_t yyscanner);
+int yylex(YYSTYPE * yylval_param, YYLTYPE * yylloc_param, fbs_ctx fbsctx);
+int _yylex(YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner);
+void yyerror(YYLTYPE *yylsp, fbs_ctx fbsctx, char const *msg);
 }/*code end*/
 
 
@@ -40,8 +36,8 @@ void yyerror(YYLTYPE *yylsp, char const *msg, yyscan_t yyscanner);
 %define api.pure full 
 
 /*to integerat with flex reentran mod*/
-%lex-param      {yyscan_t yyscanner}
-%parse-param    {yyscan_t yyscanner}
+%lex-param      {fbs_ctx fbsctx}
+%parse-param    {fbs_ctx fbsctx}
 
 %token NAME
 %token STRING
@@ -78,8 +74,8 @@ void yyerror(YYLTYPE *yylsp, char const *msg, yyscan_t yyscanner);
 /* --------- LV0 --------- */
 sql_list:
                                     /*useless, without this stmt yyerror with gen error with pure api */
-        /* empty */                 {   FBS_USE(@0);    }
-    |   sql ';'                     {   ;               } 
+        /* empty */                 {   FBS_USE(@0); FBS_USE(fbsctx);   }
+    |   sql ';'                     {   ;                               } 
     |   sql_list sql ';'
     ;
 
@@ -305,9 +301,15 @@ any_all_some:
 
 /* --------------------------------------------------------------------- */
 /* Epilogue Begin */
-void yyerror(YYLTYPE *yylsp, char const *msg, yyscan_t yyscanner)
+void yyerror(YYLTYPE *yylsp, fbs_ctx fbsctx, char const *msg)
 {
     FBS_USE(yylsp); 
-    FBS_USE(yyscanner); 
+    FBS_USE(fbsctx); 
     fprintf(stderr,"%s\n",msg);
+}
+
+int yylex(YYSTYPE * yylval_param, YYLTYPE * yylloc_param, fbs_ctx fbsctx)
+{
+    yyscan_t yyscanner = fbsctx->yyscanner;
+    return _yylex(yylval_param,yylloc_param,yyscanner);
 }
