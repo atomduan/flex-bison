@@ -77,10 +77,9 @@ void yyerror(YYLTYPE *yylsp, char const *msg, yyscan_t yyscanner);
 %%
 /* --------- LV0 --------- */
 sql_list:
-    |   sql ';'                     {  
-                                        /*useless, without this stmt yyerror with gen error with pure api */
-                                        fprintf(stdout,"debug :%d,%d\n",@1.last_line,@1.last_column);    
-                                    }
+                                    /*useless, without this stmt yyerror with gen error with pure api */
+        /* empty */                 {   FBS_USE(@0);    }
+    |   sql ';'                     {   ;               } 
     |   sql_list sql ';'
     ;
 
