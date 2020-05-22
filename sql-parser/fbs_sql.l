@@ -13,8 +13,8 @@
 /* TODO:FLEX hecked! fbs_sql_lex.yy.h dup here!! need fix */
 #ifndef YY_DECL
 #define YY_DECL_IS_OURS 1
-extern int _yylex (YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner);
-#define YY_DECL int _yylex (YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner)
+extern int _yylex (YYSTYPE * yylval_param,YYLTYPE * yylloc_param, fbs_ctx *ctxp, yyscan_t yyscanner);
+#define YY_DECL int _yylex (YYSTYPE * yylval_param,YYLTYPE * yylloc_param, fbs_ctx *ctxp, yyscan_t yyscanner)
 #endif
 %}
 

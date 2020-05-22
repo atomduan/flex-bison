@@ -36,13 +36,12 @@ extern char **environ;
 typedef void* yyscan_t;
 #endif
 
-typedef struct fbs_ctx_s fbs_ctx_t; 
+typedef struct fbs_ctx_s fbs_ctx; 
 struct fbs_ctx_s {
     yyscan_t yyscanner;
 }; 
-typedef fbs_ctx_t* fbs_ctx;
 
 int reentrant_yyparse();
-fbs_ctx fbs_ctx_init();
-int fbs_ctx_desctroy(fbs_ctx fbsctx);
+fbs_ctx * fbs_ctx_init();
+int fbs_ctx_desctroy(fbs_ctx *ctxp);
 #endif/*FBS_SQL_PARSER*/

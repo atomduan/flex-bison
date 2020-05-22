@@ -16,29 +16,29 @@ int main(int argc,char **argv)
 /*reentrant invoke, for every scanner is thread safe*/
 int reentrant_yyparse()
 {
-    fbs_ctx fbsctx = fbs_ctx_init();
-    yyparse(fbsctx);
-    fbs_ctx_desctroy(fbsctx);
+    fbs_ctx *ctxp = fbs_ctx_init();
+    yyparse(ctxp);
+    fbs_ctx_desctroy(ctxp);
     return 0;
 }
 
-fbs_ctx fbs_ctx_init()
+fbs_ctx * fbs_ctx_init()
 {
     yyscan_t yyscanner;
     yylex_init(&yyscanner);
-    fbs_ctx fbsctx = malloc(sizeof(fbs_ctx_t));
-    fbsctx->yyscanner = yyscanner;
-    return fbsctx;    
+    fbs_ctx *ctxp = malloc(sizeof(fbs_ctx));
+    ctxp->yyscanner = yyscanner;
+    return ctxp;    
 }
 
-int fbs_ctx_desctroy(fbs_ctx fbsctx)
+int fbs_ctx_desctroy(fbs_ctx *ctxp)
 {
-    if (fbsctx != NULL) {
-        yyscan_t yyscanner = fbsctx->yyscanner;
+    if (ctxp != NULL) {
+        yyscan_t yyscanner = ctxp->yyscanner;
         if (yyscanner != NULL) {
             yylex_destroy(yyscanner);
         }
-        free(fbsctx);
+        free(ctxp);
     }
     return 0;
 }

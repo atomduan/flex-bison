@@ -23,9 +23,9 @@ union YYSTYPE {
 }/*code requires end*/
 
 %code {
-int yylex(YYSTYPE * yylval_param, YYLTYPE * yylloc_param, fbs_ctx fbsctx);
-int _yylex(YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner);
-void yyerror(YYLTYPE *yylsp, fbs_ctx fbsctx, char const *msg);
+int yylex(YYSTYPE * yylval_param, YYLTYPE * yylloc_param, fbs_ctx *ctxp);
+int _yylex(YYSTYPE * yylval_param, YYLTYPE * yylloc_param, fbs_ctx *ctxp, yyscan_t yyscanner);
+void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 }/*code end*/
 
 
@@ -33,11 +33,12 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx fbsctx, char const *msg);
 /* Declarations Section */
 %defines "fbs_yy_gen.h"
 %define api.value.type {union YYSTYPE}
+/*pure option not compatitable with %glr-parser */
 %define api.pure full 
 
 /*to integerat with flex reentran mod*/
-%lex-param      {fbs_ctx fbsctx}
-%parse-param    {fbs_ctx fbsctx}
+%lex-param      {fbs_ctx *ctxp}
+%parse-param    {fbs_ctx *ctxp}
 
 %token NAME
 %token STRING
@@ -74,7 +75,7 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx fbsctx, char const *msg);
 /* --------- LV0 --------- */
 sql_list:
                                     /*useless, without this stmt yyerror with gen error with pure api */
-        /* empty */                 {   FBS_USE(@0); FBS_USE(fbsctx);   }
+        /* empty */                 {   FBS_USE(@$); FBS_USE(fbsctx);   }
     |   sql ';'                     {   ;                               } 
     |   sql_list sql ';'
     ;
@@ -301,15 +302,15 @@ any_all_some:
 
 /* --------------------------------------------------------------------- */
 /* Epilogue Begin */
-void yyerror(YYLTYPE *yylsp, fbs_ctx fbsctx, char const *msg)
+void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg)
 {
     FBS_USE(yylsp); 
-    FBS_USE(fbsctx); 
+    FBS_USE(ctxp); 
     fprintf(stderr,"%s\n",msg);
 }
 
-int yylex(YYSTYPE * yylval_param, YYLTYPE * yylloc_param, fbs_ctx fbsctx)
+int yylex(YYSTYPE * yylval_param, YYLTYPE * yylloc_param, fbs_ctx *ctxp)
 {
-    yyscan_t yyscanner = fbsctx->yyscanner;
-    return _yylex(yylval_param,yylloc_param,yyscanner);
+    yyscan_t yyscanner = ctxp->yyscanner;
+    return _yylex(yylval_param,yylloc_param,ctxp,yyscanner);
 }
