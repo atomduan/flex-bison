@@ -39,6 +39,7 @@ typedef void* yyscan_t;
 typedef struct fbs_ctx_s fbs_ctx; 
 struct fbs_ctx_s {
     yyscan_t yyscanner;
+    /* user defined start below... */
 }; 
 
 int reentrant_yyparse();
