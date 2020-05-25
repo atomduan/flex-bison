@@ -75,7 +75,7 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 /* --------- LV0 --------- */
 sql_list:
                                     /*useless, without this stmt yyerror with gen error with pure api */
-        /* empty */                 {   FBS_USE(@$); FBS_USE(fbsctx);   }
+        /* empty */                 {   FBS_USE(@$); FBS_USE(ctxp);     }
     |   sql ';'                     {   ;                               } 
     |   sql_list sql ';'
     ;
