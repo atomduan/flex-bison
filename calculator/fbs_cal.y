@@ -84,10 +84,10 @@ exp:
                                         $[var]->has_init = 1;
                                     }
 |   FNCT[func] '(' exp ')'          {   $$ = (*($[func]->value.fnctptr))($3);   }
-|   exp[left] '+' exp[right]        {   $$ = $[left] + $[right];    }
-|   exp[left] '-' exp[right]        {   $$ = $[left] - $[right];    }
-|   exp[left] '*' exp[right]        {   $$ = $[left] * $[right];    }
-|   exp[left] '/' exp[right]        { 
+|   exp[left]  '+' exp[right]       {   $$ = $[left] + $[right];    }
+|   exp[left]  '-' exp[right]       {   $$ = $[left] - $[right];    }
+|   exp[left]  '*' exp[right]       {   $$ = $[left] * $[right];    }
+|   exp[left]  '/' exp[right]       { 
                                         if ($[right] != 0) {
                                             $$ = $[left] / $[right];
                                         } else {
