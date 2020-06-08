@@ -112,6 +112,10 @@ table_ref_commalist:
     |   table_ref_commalist ',' table_ref 
     ;
 
+table_ref:
+        string_ref 
+    ;
+
 search_condition:
     |   search_condition OR search_condition
     |   search_condition AND search_condition
@@ -140,14 +144,18 @@ scalar_exp:
     |   scalar_exp '/' scalar_exp
     |   '+' scalar_exp %prec UMINUS /*TODO what the hell of this, prec*/
     |   '-' scalar_exp %prec UMINUS
-    |   literal 
-    |   table_ref 
     |   '(' scalar_exp ')'
+    |   literal_ref 
     ;
 
-table_ref:
-        NAME
-    |   table_ref '.' NAME 
+literal_ref:
+        INTNUM
+    |   string_ref
+    ;
+
+string_ref:
+        STRING
+    |   string_ref '.' STRING
     ;
 
 literal:

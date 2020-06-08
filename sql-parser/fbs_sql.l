@@ -30,7 +30,6 @@ CMP                 (=|<>|<|>|<=|>=)
 "AND"                   {   return AND;                             }
 "NOT"                   {   return NOT;                             }
 
-"NAME"                  {   return NAME;    /*TODO*/                }
 "STRING"                {   return STRING;  /*TODO*/                }
 "INTNUM"                {   return INTNUM;  /*TODO*/                }
 
