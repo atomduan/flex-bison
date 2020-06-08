@@ -155,7 +155,7 @@ literal_ref:
 
 string_ref:
         STRING
-    |   string_ref '.' STRING
+    |   string_ref '.' STRING       /*TODO what the relation between shift reduce and stack ops*/
     ;
 
 literal:
