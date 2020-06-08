@@ -40,6 +40,7 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %lex-param      {fbs_ctx *ctxp}
 %parse-param    {fbs_ctx *ctxp}
 
+%token NAME
 %token STRING
 %token INTNUM
 
@@ -107,8 +108,8 @@ where_clause:
     ;
 
 table_ref_commalist:
-        entity_ref 
-    |   table_ref_commalist ',' entity_ref 
+        table_ref 
+    |   table_ref_commalist ',' table_ref 
     ;
 
 search_condition:
@@ -132,22 +133,21 @@ like_predicate:
     |   scalar_exp LIKE literal
     ;
 
-/* TODO batch rr-conflicts here */
 scalar_exp:
         scalar_exp '+' scalar_exp
     |   scalar_exp '-' scalar_exp
     |   scalar_exp '*' scalar_exp
     |   scalar_exp '/' scalar_exp
-    |   '+' scalar_exp %prec UMINUS
+    |   '+' scalar_exp %prec UMINUS /*TODO what the hell of this, prec*/
     |   '-' scalar_exp %prec UMINUS
     |   literal 
-    |   entity_ref 
+    |   table_ref 
     |   '(' scalar_exp ')'
     ;
 
-entity_ref:
-        STRING
-    |   entity_ref '.' STRING
+table_ref:
+        NAME
+    |   table_ref '.' NAME 
     ;
 
 literal:

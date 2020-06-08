@@ -18,23 +18,24 @@ extern YY_DECL;
 %}
 
 
-ANY_OTHER           .|\n
-CMP_PT              (=|<>|<|>|<=|>=)
+OTHER               .|\n
+CMP                 (=|<>|<|>|<=|>=)
 
 %%
-"FROM"                  {   return FROM;            }
-"LIKE"                  {   return LIKE;            }
-"SELECT"                {   return SELECT;          }
-"WHERE"                 {   return WHERE;           }
-"OR"                    {   return OR;              }
-"AND"                   {   return AND;             }
-"NOT"                   {   return NOT;             }
+"FROM"                  {   return FROM;                            }
+"LIKE"                  {   return LIKE;                            }
+"SELECT"                {   return SELECT;                          }
+"WHERE"                 {   return WHERE;                           }
+"OR"                    {   return OR;                              }
+"AND"                   {   return AND;                             }
+"NOT"                   {   return NOT;                             }
 
-"STRING"                {   return STRING;          }
-"INTNUM"                {   return INTNUM;          }
+"NAME"                  {   return NAME;    /*TODO*/                }
+"STRING"                {   return STRING;  /*TODO*/                }
+"INTNUM"                {   return INTNUM;  /*TODO*/                }
 
-{CMP_PT}                {   yylval_param->subtok = (int)*yytext;
-                            return COMPARISON;      }
+{CMP}                   {   yylval_param->subtok = (int)*yytext;
+                            return COMPARISON;                      }
 
-{ANY_OTHER}             {   return (int)*yytext;    }
+{OTHER}                 {   return (int)*yytext;                    }
 %%
