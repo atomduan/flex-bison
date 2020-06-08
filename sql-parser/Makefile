@@ -29,7 +29,7 @@ fbs_lexer: fbs_sql_lex.yy.c \
 	-ldl -lpthread -lm -Wl $(LDFLAGS)
 
 fbs_sql.tab.c:
-	$(BISON) -v -d\
+	$(BISON) -v -d \
 		-Wmidrule-value \
 		-Wno-other \
 		--debug \
