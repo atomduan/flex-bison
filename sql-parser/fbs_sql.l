@@ -30,7 +30,6 @@ CMP_PT              (=|<>|<|>|<=|>=)
 "AND"                   {   return AND;             }
 "NOT"                   {   return NOT;             }
 
-"NAME"                  {   return NAME;            }
 "STRING"                {   return STRING;          }
 "INTNUM"                {   return INTNUM;          }
 

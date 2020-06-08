@@ -40,7 +40,6 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %lex-param      {fbs_ctx *ctxp}
 %parse-param    {fbs_ctx *ctxp}
 
-%token NAME
 %token STRING
 %token INTNUM
 
@@ -69,39 +68,30 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 /* --------------------------------------------------------------------- */
 /* Grammar Rules Section */ 
 %%
-/* --------- LV0 --------- */
+
+sql:    
+        /* empty */                                     {   FBS_USE(@$); FBS_USE(ctxp);     }
+    |   sql_list 
+    ;
+
 sql_list:
-                                    /*useless, without this stmt yyerror with gen error with pure api */
-        /* empty */                 {   FBS_USE(@$); FBS_USE(ctxp);     }
-    |   sql ';'                     {   ;                               } 
-    |   sql_list sql ';'
+        statement ';'
+    |   sql_list statement ';'
     ;
 
-sql:    manipulative_statement
-    ;
-
-manipulative_statement:
-        /* empty */
-    |   select_statement
+statement:
+        select_statement
     ;
 
 select_statement:
-        /* empty */
-    |   SELECT selection table_exp
+        SELECT selection from_clause where_clause
     ;
 
-/* --------- LV1 --------- */
 selection:
         scalar_exp_commalist
     |   '*'
     ;
 
-table_exp:
-        from_clause
-        opt_where_clause
-    ;
-
-/* --------- LV2 --------- */
 scalar_exp_commalist:
         scalar_exp
     |   scalar_exp_commalist ',' scalar_exp
@@ -111,22 +101,16 @@ from_clause:
         FROM table_ref_commalist
     ;
 
-opt_where_clause:
-        /* empty */
-    |   where_clause
-    ;
-
-/* --------- LV3 --------- */
-table_ref_commalist:
-        table 
-    |   table_ref_commalist ',' table 
-    ;
-
 where_clause:
-        WHERE search_condition
+        /* empty */
+    |   WHERE search_condition
     ;
 
-/* --------- LV4 --------- */
+table_ref_commalist:
+        entity_ref 
+    |   table_ref_commalist ',' entity_ref 
+    ;
+
 search_condition:
     |   search_condition OR search_condition
     |   search_condition AND search_condition
@@ -134,7 +118,6 @@ search_condition:
     |   predicate
     ;
 
-/* --------- LV5 --------- */
 predicate:
         comparison_predicate
     |   like_predicate
@@ -149,7 +132,7 @@ like_predicate:
     |   scalar_exp LIKE literal
     ;
 
-/* --------- LV6 --------- */
+/* TODO batch rr-conflicts here */
 scalar_exp:
         scalar_exp '+' scalar_exp
     |   scalar_exp '-' scalar_exp
@@ -158,20 +141,13 @@ scalar_exp:
     |   '+' scalar_exp %prec UMINUS
     |   '-' scalar_exp %prec UMINUS
     |   literal 
-    |   column_ref
+    |   entity_ref 
     |   '(' scalar_exp ')'
     ;
 
-/* --------- LV7 --------- */
-table:
-        NAME
-    |   NAME '.' NAME
-    ;
-
-column_ref:
-        NAME
-    |   NAME '.' NAME   /* needs semantics */
-    |   NAME '.' NAME '.' NAME
+entity_ref:
+        STRING
+    |   entity_ref '.' STRING
     ;
 
 literal:
