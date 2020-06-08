@@ -117,7 +117,7 @@ table_ref:
     ;
 
 search_condition:
-    |   search_condition OR search_condition
+        search_condition OR search_condition
     |   search_condition AND search_condition
     |   '(' search_condition ')'
     |   predicate
