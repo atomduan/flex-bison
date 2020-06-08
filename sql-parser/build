@@ -3,7 +3,10 @@ curr=$(cd `dirname $(which $0)`; pwd)
 
 cd $curr
 make clean
+# make default target is its first target
+# in Makefile: fbs_parser
 make
+make fbs_lexer
 
 if [ -f "automaton.dot" ]; then
     if [ -f "automaton.svg" ]; then
