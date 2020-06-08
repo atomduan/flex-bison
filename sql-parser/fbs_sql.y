@@ -66,9 +66,6 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %destructor { free($$); } <*>
 
 
-/*
-TODO : unfinished 
-*/
 /* --------------------------------------------------------------------- */
 /* Grammar Rules Section */ 
 %%
@@ -120,18 +117,6 @@ opt_where_clause:
     ;
 
 /* --------- LV3 --------- */
-scalar_exp:
-        scalar_exp '+' scalar_exp
-    |   scalar_exp '-' scalar_exp
-    |   scalar_exp '*' scalar_exp
-    |   scalar_exp '/' scalar_exp
-    |   '+' scalar_exp %prec UMINUS
-    |   '-' scalar_exp %prec UMINUS
-    |   literal 
-    |   column_ref
-    |   '(' scalar_exp ')'
-    ;
-
 table_ref_commalist:
         table 
     |   table_ref_commalist ',' table 
@@ -142,17 +127,6 @@ where_clause:
     ;
 
 /* --------- LV4 --------- */
-column_ref:
-        NAME
-    |   NAME '.' NAME   /* needs semantics */
-    |   NAME '.' NAME '.' NAME
-    ;
-
-table:
-        NAME
-    |   NAME '.' NAME
-    ;
-
 search_condition:
     |   search_condition OR search_condition
     |   search_condition AND search_condition
@@ -166,11 +140,6 @@ predicate:
     |   like_predicate
     ;
 
-literal:
-        STRING
-    |   INTNUM
-    ;
-
 comparison_predicate:
         scalar_exp COMPARISON scalar_exp
     ;
@@ -178,6 +147,36 @@ comparison_predicate:
 like_predicate:
         scalar_exp NOT LIKE literal
     |   scalar_exp LIKE literal
+    ;
+
+/* --------- LV6 --------- */
+scalar_exp:
+        scalar_exp '+' scalar_exp
+    |   scalar_exp '-' scalar_exp
+    |   scalar_exp '*' scalar_exp
+    |   scalar_exp '/' scalar_exp
+    |   '+' scalar_exp %prec UMINUS
+    |   '-' scalar_exp %prec UMINUS
+    |   literal 
+    |   column_ref
+    |   '(' scalar_exp ')'
+    ;
+
+/* --------- LV7 --------- */
+table:
+        NAME
+    |   NAME '.' NAME
+    ;
+
+column_ref:
+        NAME
+    |   NAME '.' NAME   /* needs semantics */
+    |   NAME '.' NAME '.' NAME
+    ;
+
+literal:
+        STRING
+    |   INTNUM
     ;
 %%
 
