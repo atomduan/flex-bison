@@ -42,7 +42,7 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 
 %token NAME
 %token STRING
-%token INTNUM APPROXNUM
+%token INTNUM
 
 /* operators */
 %left OR
@@ -54,14 +54,10 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %nonassoc UMINUS
 
 /* literal keyword tokens */
-%token ALL AMMSC ANY BETWEEN BY
-%token DISTINCT 
-%token ESCAPE EXISTS FROM 
-%token GROUP HAVING IN INDICATOR INTO
-%token IS LIKE NULLX 
+%token FROM 
+%token LIKE
 %token SELECT
-%token SOME 
-%token USER WHERE 
+%token WHERE 
 
 %destructor { printf("destructor intval, do nothing.\n"); } <intval>
 %destructor { printf("destructor floatval, do nothing.\n"); } <floatval>
@@ -145,9 +141,16 @@ where_clause:
         WHERE search_condition
     ;
 
-column_ref_commalist:
-        column_ref
-    |   column_ref_commalist ',' column_ref
+/* --------- LV4 --------- */
+column_ref:
+        NAME
+    |   NAME '.' NAME   /* needs semantics */
+    |   NAME '.' NAME '.' NAME
+    ;
+
+table:
+        NAME
+    |   NAME '.' NAME
     ;
 
 search_condition:
@@ -157,75 +160,24 @@ search_condition:
     |   predicate
     ;
 
-/* --------- LV4 --------- */
+/* --------- LV5 --------- */
 predicate:
         comparison_predicate
     |   like_predicate
     ;
 
-/* --------- LV5 --------- */
 literal:
         STRING
     |   INTNUM
-    |   APPROXNUM
-    ;
-
-table:
-        NAME
-    |   NAME '.' NAME
     ;
 
 comparison_predicate:
         scalar_exp COMPARISON scalar_exp
-    |   scalar_exp COMPARISON subquery
-    ;
-
-between_predicate:
-        scalar_exp NOT BETWEEN scalar_exp AND scalar_exp
-    |   scalar_exp BETWEEN scalar_exp AND scalar_exp
     ;
 
 like_predicate:
-        scalar_exp NOT LIKE literal opt_escape
-    |   scalar_exp LIKE literal opt_escape
-    ;
-
-test_for_null:
-        column_ref IS NOT NULLX
-    |   column_ref IS NULLX
-    ;
-
-
-all_or_any_predicate:
-        scalar_exp COMPARISON any_all_some subquery
-    ;
-
-
-/* --------- LV6 --------- */
-subquery:
-        '(' SELECT opt_all_distinct selection table_exp ')'
-    ;
-
-opt_escape:
-        /* empty */
-    |   ESCAPE atom
-    ;
-
-column_ref:
-        NAME
-    |   NAME '.' NAME   /* needs semantics */
-    |   NAME '.' NAME '.' NAME
-    ;
-
-literal_commalist:
-        literal 
-    |   literal_commalist ',' literal 
-    ;
-
-any_all_some:
-        ANY
-    |   ALL
-    |   SOME
+        scalar_exp NOT LIKE literal
+    |   scalar_exp LIKE literal
     ;
 %%
 
