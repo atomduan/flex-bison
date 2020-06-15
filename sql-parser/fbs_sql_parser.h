@@ -40,10 +40,15 @@ typedef struct fbs_ctx_s fbs_ctx;
 struct fbs_ctx_s {
     yyscan_t    yyscanner;
     /* user defined start below... */
-    FILE       *logger;
+    FILE       *log;
+    char       *lex_text;
+    char       *lex_text_ptr;
 }; 
 
 int reentrant_yyparse();
 fbs_ctx * fbs_ctx_init();
 int fbs_ctx_desctroy(fbs_ctx *ctxp);
+
+#define FBS_MAX_STR_CONST   4096
+
 #endif/*FBS_SQL_PARSER*/

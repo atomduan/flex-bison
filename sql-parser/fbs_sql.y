@@ -141,8 +141,8 @@ scalar_exp:
     |   scalar_exp '-' scalar_exp
     |   scalar_exp '*' scalar_exp
     |   scalar_exp '/' scalar_exp
-    |   '+' scalar_exp %prec UMINUS /*TODO what the hell of this, prec*/
-    |   '-' scalar_exp %prec UMINUS
+    |   '+' scalar_exp %prec UMINUS /* %prec mean this sub rule "'+' scalar_exp %prec" has the UMINUS precedence */
+    |   '-' scalar_exp %prec UMINUS /* %prec mean this sub rule "'+' scalar_exp %prec" has the UMINUS precedence */
     |   '(' scalar_exp ')'
     |   scalar_unit 
     ;
