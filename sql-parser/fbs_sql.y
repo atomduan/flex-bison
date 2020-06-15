@@ -40,7 +40,6 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %lex-param      {fbs_ctx *ctxp}
 %parse-param    {fbs_ctx *ctxp}
 
-%token NAME
 %token STRING
 %token INTNUM
 
@@ -113,7 +112,7 @@ table_ref_commalist:
     ;
 
 table_ref:
-        string_ref 
+        name_ref 
     ;
 
 search_condition:
@@ -133,8 +132,8 @@ comparison_predicate:
     ;
 
 like_predicate:
-        scalar_exp NOT LIKE literal
-    |   scalar_exp LIKE literal
+        scalar_exp NOT LIKE like_literal
+    |   scalar_exp LIKE like_literal
     ;
 
 scalar_exp:
@@ -145,20 +144,20 @@ scalar_exp:
     |   '+' scalar_exp %prec UMINUS /*TODO what the hell of this, prec*/
     |   '-' scalar_exp %prec UMINUS
     |   '(' scalar_exp ')'
-    |   literal_ref 
+    |   scalar_unit 
     ;
 
-literal_ref:
+scalar_unit:
         INTNUM
-    |   string_ref
+    |   name_ref 
     ;
 
-string_ref:
+name_ref:
         STRING
-    |   string_ref '.' STRING       /*TODO what the relation between shift reduce and stack ops*/
+    |   name_ref '.' STRING       /*TODO what the relation between shift reduce and stack ops*/
     ;
 
-literal:
+like_literal:
         STRING
     |   INTNUM
     ;
