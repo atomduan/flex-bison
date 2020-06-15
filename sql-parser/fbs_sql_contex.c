@@ -17,6 +17,7 @@ fbs_ctx * fbs_ctx_init()
     yylex_init(&yyscanner);
     fbs_ctx *ctxp = malloc(sizeof(fbs_ctx));
     ctxp->yyscanner = yyscanner;
+    ctxp->logger = stdout;
     return ctxp;    
 }
 

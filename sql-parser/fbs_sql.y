@@ -70,7 +70,7 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %%
 
 sql:    
-        /* empty */                                     {   FBS_USE(@$); FBS_USE(ctxp);     }
+        /* empty */                                             {   FBS_USE(@$); FBS_USE(ctxp);                     }
     |   sql_list 
     ;
 
