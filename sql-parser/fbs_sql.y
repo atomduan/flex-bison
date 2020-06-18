@@ -18,7 +18,7 @@ union YYSTYPE {
     int     intval;
     double  floatval;
     char   *strval;
-    int     subtok;
+    int     lextok;
 };
 }/*code requires end*/
 
@@ -47,7 +47,7 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %left OR
 %left AND
 %left NOT
-%left <subtok> COMPARISON /* = <> < > <= >= */
+%left <lextok> COMPARISON /* = <> < > <= >= */
 %left '+' '-'
 %left '*' '/'
 %nonassoc UMINUS
@@ -60,7 +60,7 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 
 %destructor { printf("destructor intval, do nothing.\n"); } <intval>
 %destructor { printf("destructor floatval, do nothing.\n"); } <floatval>
-%destructor { printf("destructor subtok, do nothing.\n"); } <subtok>
+%destructor { printf("destructor lextok, do nothing.\n"); } <lextok>
 %destructor { printf("Discarding tagless symbol.\n"); } <>
 %destructor { free($$); } <*>
 
@@ -71,12 +71,12 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 
 sql:    
         /* empty */                                             {   FBS_USE(@$); FBS_USE(ctxp);                     }
-    |   sql_list 
+    |   statement_list 
     ;
 
-sql_list:
+statement_list:
         statement ';'
-    |   sql_list statement ';'
+    |   statement_list statement ';'
     ;
 
 statement:
@@ -88,17 +88,17 @@ select_statement:
     ;
 
 selection:
-        scalar_exp_commalist
+        scalar_exp_list
     |   '*'
     ;
 
-scalar_exp_commalist:
+scalar_exp_list:
         scalar_exp
-    |   scalar_exp_commalist ',' scalar_exp
+    |   scalar_exp_list ',' scalar_exp
     ;
 
 from_clause:
-        FROM table_ref_commalist
+        FROM table_ref_list
     ;
 
 where_clause:
@@ -106,9 +106,9 @@ where_clause:
     |   WHERE search_condition
     ;
 
-table_ref_commalist:
+table_ref_list:
         table_ref 
-    |   table_ref_commalist ',' table_ref 
+    |   table_ref_list ',' table_ref 
     ;
 
 table_ref:
@@ -128,7 +128,10 @@ predicate:
     ;
 
 comparison_predicate:
-        scalar_exp COMPARISON scalar_exp
+        scalar_exp COMPARISON scalar_exp                        {
+                                                                    int cmptok = $2;
+                                                                    fprintf(ctxp->log,"cmptok %d\n", cmptok); 
+                                                                } 
     ;
 
 like_predicate:

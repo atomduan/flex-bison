@@ -99,7 +99,7 @@ STR_CTNT                [^\"]
 
 {CMP}                   {   
                             fprintf(ctxp->log, "lex>> hit pattern:[{CMP}] --> token:[%s]\n", yytext); 
-                            yylval_param->subtok = (int)*yytext;
+                            yylval_param->lextok = fbs_lex_get_cmp_lextok(yytext);
                             return COMPARISON;
                         }
 

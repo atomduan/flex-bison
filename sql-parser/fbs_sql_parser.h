@@ -41,6 +41,7 @@ struct fbs_ctx_s {
     yyscan_t    yyscanner;
     /* user defined start below... */
     FILE       *log;
+    FILE       *log_err;
     char       *lex_text;
     char       *lex_text_ptr;
 }; 
@@ -48,6 +49,16 @@ struct fbs_ctx_s {
 int reentrant_yyparse();
 fbs_ctx * fbs_ctx_init();
 int fbs_ctx_desctroy(fbs_ctx *ctxp);
+
+/* lex utils */
+#define FBS_LEX_NUL         0
+#define FBS_LEX_EQ          1
+#define FBS_LEX_GT          2
+#define FBS_LEX_LT          3
+#define FBS_LEX_NEQ         4
+#define FBS_LEX_EGT         5
+#define FBS_LEX_ELT         6
+int fbs_lex_get_cmp_lextok(const char *fbs_text);
 
 #define FBS_MAX_STR_CONST   4096
 

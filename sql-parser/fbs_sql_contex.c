@@ -19,6 +19,7 @@ fbs_ctx * fbs_ctx_init()
     ctxp->yyscanner = yyscanner;
     //log setting
     ctxp->log = stdout;
+    ctxp->log_err = stderr;
     //lex str buff
     ctxp->lex_text = malloc(FBS_MAX_STR_CONST);
     ctxp->lex_text_ptr = ctxp->lex_text;
@@ -35,4 +36,26 @@ int fbs_ctx_desctroy(fbs_ctx *ctxp)
         free(ctxp);
     }
     return 0;
+}
+
+int fbs_lex_get_cmp_lextok(const char *fbs_text) {
+    if (0 == strcmp("=", fbs_text)) {
+        return FBS_LEX_EQ;
+    }
+    if (0 == strcmp(">", fbs_text)) {
+        return FBS_LEX_GT;
+    }
+    if (0 == strcmp("<", fbs_text)) {
+        return FBS_LEX_LT;
+    }
+    if (0 == strcmp("<>", fbs_text)) {
+        return FBS_LEX_NEQ;
+    }
+    if (0 == strcmp("<=", fbs_text)) {
+        return FBS_LEX_ELT;
+    }
+    if (0 == strcmp(">=", fbs_text)) {
+        return FBS_LEX_EGT;
+    }
+    return FBS_LEX_NUL;
 }
