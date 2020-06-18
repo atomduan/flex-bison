@@ -44,6 +44,7 @@ struct fbs_ctx_s {
     FILE       *log_err;
     char       *lex_text;
     char       *lex_text_ptr;
+    int         intval;
 }; 
 
 int reentrant_yyparse();

@@ -173,8 +173,10 @@ int on_scalar_exp_su(fbs_ctx *ctxp, int sun)
     return 0;
 }
 
-int on_scalar_unit_i(fbs_ctx *ctxp, int num)
+int on_scalar_unit_i(fbs_ctx *ctxp)
 {
+    int intval = ctxp->intval;
+    fprintf(ctxp->log, "on_scalar_unit_i is :%d\n", intval);
     return 0;
 }
 
@@ -183,28 +185,30 @@ int on_scalar_unit_n(fbs_ctx *ctxp, int nrf)
     return 0;
 }
 
-int on_name_ref_s(fbs_ctx *ctxp, int str)
+int on_name_ref_s(fbs_ctx *ctxp)
 {
     char * ss = ctxp->lex_text;
     fprintf(ctxp->log, "on_name_ref_s :%s\n", ss);
     return 0;
 }
 
-int on_name_ref_ns(fbs_ctx *ctxp, int nrf, int str)
+int on_name_ref_ns(fbs_ctx *ctxp, int nrf)
 {
     char * ss = ctxp->lex_text;
     fprintf(ctxp->log, "on_name_ref_ns :%s\n", ss);
     return 0;
 }
 
-int on_like_literal_s(fbs_ctx *ctxp, int str)
+int on_like_literal_s(fbs_ctx *ctxp)
 {
     char * ss = ctxp->lex_text;
     fprintf(ctxp->log, "on_like_literal_s is :%s\n", ss);
     return 0;
 }
 
-int on_like_literal_i(fbs_ctx *ctxp, int num)
+int on_like_literal_i(fbs_ctx *ctxp)
 {
+    int intval = ctxp->intval;
+    fprintf(ctxp->log, "on_like_literal_i is :%d\n", intval);
     return 0;
 }

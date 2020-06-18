@@ -87,6 +87,7 @@ STR_CTNT                [^\"]
 
 {INTNUM}                {   
                             fprintf(ctxp->log, "lex>> hit pattern:[INTNUM] --> token:[%s]\n", yytext); 
+                            ctxp->intval = atoi(yytext);
                             return INTNUM;
                         }
 

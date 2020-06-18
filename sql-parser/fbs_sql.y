@@ -174,18 +174,18 @@ scalar_exp:
     ;
 
 scalar_unit:
-        INTNUM[num]     { $$ = on_scalar_unit_i(ctxp, $[num]); }
+        INTNUM          { $$ = on_scalar_unit_i(ctxp); }
     |   name_ref[nrf]   { $$ = on_scalar_unit_n(ctxp, $[nrf]); }
     ;
 
 name_ref:
-        STRING[str]                     { $$ = on_name_ref_s(ctxp, $[str]); }
-    |   name_ref[nrf] '.' STRING[str]   { $$ = on_name_ref_ns(ctxp, $[nrf], $[str]); }
+        STRING                          { $$ = on_name_ref_s(ctxp); }
+    |   name_ref[nrf] '.' STRING        { $$ = on_name_ref_ns(ctxp, $[nrf]); }
     ;
 
 like_literal:
-        STRING[str] { $$ = on_like_literal_s(ctxp, $[str]); }
-    |   INTNUM[num] { $$ = on_like_literal_i(ctxp, $[num]); }
+        STRING { $$ = on_like_literal_s(ctxp); }
+    |   INTNUM { $$ = on_like_literal_i(ctxp); }
     ;
 %%
 
