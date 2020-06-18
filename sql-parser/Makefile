@@ -10,16 +10,18 @@ BUILD_DEPS=./fbs_sql_context.h \
 	./fbs_sql_parser.h
 BUILD_INCS=-I ./
 
-fbs_parser: fbs_sql_lex.yy.c \
+fbs_sql: fbs_sql_lex.yy.c \
 	fbs_sql.tab.c \
 	fbs_sql_lex.yy.o \
 	fbs_sql.tab.o \
 	fbs_sql_context.o \
-	fbs_sql_parser.o
-	$(LINK) -o fbs_parser.bin fbs_sql.tab.o \
+	fbs_sql_parser.o \
+	fbs_sql.o
+	$(LINK) -o fbs_sql.bin fbs_sql.tab.o \
 	fbs_sql_lex.yy.o \
 	fbs_sql_context.o \
 	fbs_sql_parser.o \
+	fbs_sql.o \
 	-ldl -lpthread -lm -Wl $(LDFLAGS)
 
 fbs_lexer: fbs_sql_lex.yy.c \
@@ -27,10 +29,12 @@ fbs_lexer: fbs_sql_lex.yy.c \
 	fbs_sql_lex.yy.o \
 	fbs_sql.tab.o \
 	fbs_sql_context.o \
+	fbs_sql_parser.o \
 	fbs_sql_lexer.o
 	$(LINK) -o fbs_lexer.bin fbs_sql.tab.o \
 	fbs_sql_lex.yy.o \
 	fbs_sql_context.o \
+	fbs_sql_parser.o \
 	fbs_sql_lexer.o \
 	-ldl -lpthread -lm -Wl $(LDFLAGS)
 
@@ -61,6 +65,9 @@ fbs_sql_parser.o:	$(BUILD_DEPS)
 
 fbs_sql_lexer.o:	$(BUILD_DEPS)
 	$(CC) $(CFLAGS) $(BUILD_INCS) -o fbs_sql_lexer.o fbs_sql_lexer.c
+
+fbs_sql.o:	$(BUILD_DEPS)
+	$(CC) $(CFLAGS) $(BUILD_INCS) -o fbs_sql.o fbs_sql.c
 
 .PHONY:clean
 clean:

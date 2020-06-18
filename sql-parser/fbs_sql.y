@@ -19,6 +19,7 @@ union YYSTYPE {
     double  floatval;
     char   *strval;
     int     lextok;
+    int     symid;
 };
 }/*code requires end*/
 
@@ -40,8 +41,8 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %lex-param      {fbs_ctx *ctxp}
 %parse-param    {fbs_ctx *ctxp}
 
-%token STRING
-%token INTNUM
+%token <symid>      STRING
+%token <intval>     INTNUM
 
 /* operators */
 %left OR
@@ -58,9 +59,30 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %token SELECT
 %token WHERE 
 
+%nterm  <symid>     accept
+%nterm  <symid>     sql   
+%nterm  <symid>     statement_list
+%nterm  <symid>     statement
+%nterm  <symid>     select_stmt
+%nterm  <symid>     selection
+%nterm  <symid>     scalar_exp_list
+%nterm  <symid>     from_clause
+%nterm  <symid>     where_clause
+%nterm  <symid>     table_ref_list
+%nterm  <symid>     table_ref
+%nterm  <symid>     search_condition
+%nterm  <symid>     predicate
+%nterm  <symid>     comparison_predicate
+%nterm  <symid>     like_predicate
+%nterm  <symid>     scalar_exp
+%nterm  <symid>     scalar_unit
+%nterm  <symid>     name_ref
+%nterm  <symid>     like_literal
+
 %destructor { printf("destructor intval, do nothing.\n"); } <intval>
 %destructor { printf("destructor floatval, do nothing.\n"); } <floatval>
 %destructor { printf("destructor lextok, do nothing.\n"); } <lextok>
+%destructor { printf("destructor symid, do nothing.\n"); } <symid>
 %destructor { printf("Discarding tagless symbol.\n"); } <>
 %destructor { free($$); } <*>
 
@@ -68,101 +90,102 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 /* --------------------------------------------------------------------- */
 /* Grammar Rules Section */ 
 %%
+accept:
+        sql[sql]                    { FBS_USE(@$); FBS_USE(ctxp);
+                                      $$ = on_accept(ctxp,$[sql]); }
+    ; 
 
 sql:    
-        /* empty */                                             {   FBS_USE(@$); FBS_USE(ctxp);                     }
-    |   statement_list 
+        /* empty */                 { $$ = on_sql_empty(ctxp); }
+    |   statement_list[stl]         { $$ = on_sql_sl(ctxp, $[stl]); } 
     ;
 
 statement_list:
-        statement ';'
-    |   statement_list statement ';'
+        statement[stm] ';'          { $$ = on_statement_list_s(ctxp, $[stm]); }
+    |   statement_list[stl] statement[stm] ';'  { $$ = on_statement_list_ss(ctxp, $[stl], $[stm]); }
     ;
 
 statement:
-        select_statement
+        select_stmt[sls]            { $$ = on_statement_ss(ctxp, $[sls]); }
     ;
 
-select_statement:
-        SELECT selection from_clause where_clause
+select_stmt:
+        SELECT selection[sel] from_clause[fcl] where_clause[wcl]    { $$ = on_select_stmt_ssfw(ctxp, $[sel], $[fcl], $[wcl]); }
     ;
 
 selection:
-        scalar_exp_list
-    |   '*'
+        scalar_exp_list[sel]        { $$ = on_selection_sel(ctxp, $[sel]); }
+    |   '*'                         { $$ = on_selection_all(ctxp); }
     ;
 
 scalar_exp_list:
-        scalar_exp
-    |   scalar_exp_list ',' scalar_exp
+        scalar_exp                  { $$ = on_scalar_exp_list_s(ctxp); }
+    |   scalar_exp_list[sel] ',' scalar_exp[sep]    { $$ = on_scalar_exp_list_ss(ctxp,$[sel], $[sep]); }
     ;
 
 from_clause:
-        FROM table_ref_list
+        FROM table_ref_list[trl]    { $$ = on_from_clause_ft(ctxp, $[trl]); }
     ;
 
 where_clause:
-        /* empty */
-    |   WHERE search_condition
+        /* empty */                 { $$ = on_where_clause_empty(ctxp); }
+    |   WHERE search_condition[scd] { $$ = on_where_clause_ws(ctxp, $[scd]); }
     ;
 
 table_ref_list:
-        table_ref 
-    |   table_ref_list ',' table_ref 
+        table_ref[trf]              { $$ = on_table_ref_list_t(ctxp, $[trf]); }
+    |   table_ref_list[trl] ',' table_ref[trf]  { $$ = on_table_ref_list_tt(ctxp, $[trl], $[trf]); } 
     ;
 
 table_ref:
-        name_ref 
+        name_ref[nrf]               { $$ = on_table_ref_n(ctxp, $[nrf]); }
     ;
 
 search_condition:
-        search_condition OR search_condition
-    |   search_condition AND search_condition
-    |   '(' search_condition ')'
-    |   predicate
+        search_condition[sdl] OR search_condition[sdr]  { $$ = on_search_condition_sos(ctxp, $[sdl], $[sdr]); }
+    |   search_condition[sdl] AND search_condition[sdr] { $$ = on_search_condition_sas(ctxp, $[sdl], $[sdr]); }
+    |   '(' search_condition[sdt] ')' { $$ = on_search_condition_s(ctxp, $[sdt]); }
+    |   predicate[pdt] { $$ = on_search_condition_p(ctxp, $[pdt]); }
     ;
 
 predicate:
-        comparison_predicate
-    |   like_predicate
+        comparison_predicate[cpd]   { $$ = on_predicate_c(ctxp, $[cpd]); }
+    |   like_predicate[lpd]         { $$ = on_predicate_l(ctxp, $[lpd]); }
     ;
 
 comparison_predicate:
-        scalar_exp COMPARISON scalar_exp                        {
-                                                                    int cmptok = $2;
-                                                                    fprintf(ctxp->log,"cmptok %d\n", cmptok); 
-                                                                } 
+        scalar_exp[sel] COMPARISON scalar_exp[ser]  { $$ = on_comparison_predicate_scs(ctxp, $[sel], $[ser]); } 
     ;
 
 like_predicate:
-        scalar_exp NOT LIKE like_literal
-    |   scalar_exp LIKE like_literal
+        scalar_exp[sep] NOT LIKE like_literal[lkl]  { $$ = on_like_predicate_snll(ctxp, $[sep], $[lkl]); }
+    |   scalar_exp[sep] LIKE like_literal[lkl]      { $$ = on_like_predicate_sll(ctxp, $[sep], $[lkl]); }
     ;
 
 scalar_exp:
-        scalar_exp '+' scalar_exp
-    |   scalar_exp '-' scalar_exp
-    |   scalar_exp '*' scalar_exp
-    |   scalar_exp '/' scalar_exp
-    |   '+' scalar_exp %prec UMINUS /* %prec mean this sub rule "'+' scalar_exp %prec" has the UMINUS precedence */
-    |   '-' scalar_exp %prec UMINUS /* %prec mean this sub rule "'+' scalar_exp %prec" has the UMINUS precedence */
-    |   '(' scalar_exp ')'
-    |   scalar_unit 
+        scalar_exp[sel] '+' scalar_exp[ser] { $$ = on_scalar_exp_sps(ctxp, $[sel], $[ser]); }
+    |   scalar_exp[sel] '-' scalar_exp[ser] { $$ = on_scalar_exp_sss(ctxp, $[sel], $[ser]); }
+    |   scalar_exp[sel] '*' scalar_exp[ser] { $$ = on_scalar_exp_sms(ctxp, $[sel], $[ser]); }
+    |   scalar_exp[sel] '/' scalar_exp[ser] { $$ = on_scalar_exp_sds(ctxp, $[sel], $[ser]); }
+    |   '+' scalar_exp[sep] %prec UMINUS    { $$ = on_scalar_exp_aspu(ctxp, $[sep]); }
+    |   '-' scalar_exp[sep] %prec UMINUS    { $$ = on_scalar_exp_sspu(ctxp, $[sep]); }
+    |   '(' scalar_exp[sep] ')'             { $$ = on_scalar_exp_se(ctxp, $[sep]); }
+    |   scalar_unit[sun]                    { $$ = on_scalar_exp_su(ctxp, $[sun]); }
     ;
 
 scalar_unit:
-        INTNUM
-    |   name_ref 
+        INTNUM[num]     { $$ = on_scalar_unit_i(ctxp, $[num]); }
+    |   name_ref[nrf]   { $$ = on_scalar_unit_n(ctxp, $[nrf]); }
     ;
 
 name_ref:
-        STRING
-    |   name_ref '.' STRING       /*TODO what the relation between shift reduce and stack ops*/
+        STRING[str]                     { $$ = on_name_ref_s(ctxp, $[str]); }
+    |   name_ref[nrf] '.' STRING[str]   { $$ = on_name_ref_ns(ctxp, $[nrf], $[str]); }
     ;
 
 like_literal:
-        STRING
-    |   INTNUM
+        STRING[str] { $$ = on_like_literal_s(ctxp, $[str]); }
+    |   INTNUM[num] { $$ = on_like_literal_i(ctxp, $[num]); }
     ;
 %%
 
