@@ -185,16 +185,22 @@ int on_scalar_unit_n(fbs_ctx *ctxp, int nrf)
 
 int on_name_ref_s(fbs_ctx *ctxp, int str)
 {
+    char * ss = ctxp->lex_text;
+    fprintf(ctxp->log, "on_name_ref_s :%s\n", ss);
     return 0;
 }
 
 int on_name_ref_ns(fbs_ctx *ctxp, int nrf, int str)
 {
+    char * ss = ctxp->lex_text;
+    fprintf(ctxp->log, "on_name_ref_ns :%s\n", ss);
     return 0;
 }
 
 int on_like_literal_s(fbs_ctx *ctxp, int str)
 {
+    char * ss = ctxp->lex_text;
+    fprintf(ctxp->log, "on_like_literal_s is :%s\n", ss);
     return 0;
 }
 
