@@ -17,8 +17,7 @@ typedef struct YYLTYPE {
 union YYSTYPE {
     int     intval;
     double  floatval;
-    char   *strval;
-    int     lextok;
+    int     tokenum;
     int     symid;
 };
 }/*code requires end*/
@@ -48,7 +47,7 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %left OR
 %left AND
 %left NOT
-%left <lextok> COMPARISON /* = <> < > <= >= */
+%left <tokenum> COMPARISON /* = <> < > <= >= */
 %left '+' '-'
 %left '*' '/'
 %nonassoc UMINUS
@@ -81,7 +80,7 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 
 %destructor { printf("destructor intval, do nothing.\n"); } <intval>
 %destructor { printf("destructor floatval, do nothing.\n"); } <floatval>
-%destructor { printf("destructor lextok, do nothing.\n"); } <lextok>
+%destructor { printf("destructor tokenum, do nothing.\n"); } <tokenum>
 %destructor { printf("destructor symid, do nothing.\n"); } <symid>
 %destructor { printf("Discarding tagless symbol.\n"); } <>
 %destructor { free($$); } <*>
@@ -174,8 +173,8 @@ scalar_exp:
     ;
 
 scalar_unit:
-        INTNUM          { $$ = on_scalar_unit_i(ctxp); }
-    |   name_ref[nrf]   { $$ = on_scalar_unit_n(ctxp, $[nrf]); }
+        INTNUM[val]         { $$ = on_scalar_unit_i(ctxp, $[val]); }
+    |   name_ref[nrf]       { $$ = on_scalar_unit_n(ctxp, $[nrf]); }
     ;
 
 name_ref:
@@ -184,8 +183,8 @@ name_ref:
     ;
 
 like_literal:
-        STRING { $$ = on_like_literal_s(ctxp); }
-    |   INTNUM { $$ = on_like_literal_i(ctxp); }
+        STRING      { $$ = on_like_literal_s(ctxp); }
+    |   INTNUM[val] { $$ = on_like_literal_i(ctxp, $[val]); }
     ;
 %%
 

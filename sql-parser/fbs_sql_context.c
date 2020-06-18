@@ -38,7 +38,7 @@ int fbs_ctx_desctroy(fbs_ctx *ctxp)
     return 0;
 }
 
-int fbs_lex_get_cmp_lextok(const char *fbs_text) {
+int fbs_lex_get_cmp_tokenum(const char *fbs_text) {
     if (0 == strcmp("=", fbs_text)) {
         return FBS_LEX_EQ;
     }

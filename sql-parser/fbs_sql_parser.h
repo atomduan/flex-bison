@@ -35,11 +35,11 @@ int on_scalar_exp_aspu(fbs_ctx *ctxp, int sep);
 int on_scalar_exp_sspu(fbs_ctx *ctxp, int sep);
 int on_scalar_exp_se(fbs_ctx *ctxp, int sep);
 int on_scalar_exp_su(fbs_ctx *ctxp, int sun);
-int on_scalar_unit_i(fbs_ctx *ctxp);
+int on_scalar_unit_i(fbs_ctx *ctxp, int val);
 int on_scalar_unit_n(fbs_ctx *ctxp, int nrf);
 int on_name_ref_s(fbs_ctx *ctxp);
 int on_name_ref_ns(fbs_ctx *ctxp, int nrf);
 int on_like_literal_s(fbs_ctx *ctxp);
-int on_like_literal_i(fbs_ctx *ctxp);
+int on_like_literal_i(fbs_ctx *ctxp, int val);
 
 #endif/*FBS_SQL_PARSER*/

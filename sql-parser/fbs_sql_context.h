@@ -44,7 +44,6 @@ struct fbs_ctx_s {
     FILE       *log_err;
     char       *lex_text;
     char       *lex_text_ptr;
-    int         intval;
 }; 
 
 int reentrant_yyparse();
@@ -59,7 +58,7 @@ int fbs_ctx_desctroy(fbs_ctx *ctxp);
 #define FBS_LEX_NEQ         4
 #define FBS_LEX_EGT         5
 #define FBS_LEX_ELT         6
-int fbs_lex_get_cmp_lextok(const char *fbs_text);
+int fbs_lex_get_cmp_tokenum(const char *fbs_text);
 
 #define FBS_MAX_STR_CONST   4096
 

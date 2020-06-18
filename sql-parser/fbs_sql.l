@@ -87,7 +87,7 @@ STR_CTNT                [^\"]
 
 {INTNUM}                {   
                             fprintf(ctxp->log, "lex>> hit pattern:[INTNUM] --> token:[%s]\n", yytext); 
-                            ctxp->intval = atoi(yytext);
+                            yylval_param->intval = atoi(yytext);
                             return INTNUM;
                         }
 
@@ -100,7 +100,7 @@ STR_CTNT                [^\"]
 
 {CMP}                   {   
                             fprintf(ctxp->log, "lex>> hit pattern:[{CMP}] --> token:[%s]\n", yytext); 
-                            yylval_param->lextok = fbs_lex_get_cmp_lextok(yytext);
+                            yylval_param->tokenum = fbs_lex_get_cmp_tokenum(yytext);
                             return COMPARISON;
                         }
 
