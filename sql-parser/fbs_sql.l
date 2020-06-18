@@ -9,7 +9,7 @@
 %option header-file="fbs_sql_lex.yy.h"
 
 %{
-#include <fbs_sql_parser.h>
+#include <fbs_sql_context.h>
 #include <fbs_yy_gen.h>
 #ifndef YY_DECL
 #define YY_DECL_IS_OURS 1
