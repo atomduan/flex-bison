@@ -36,15 +36,33 @@ extern char **environ;
 typedef void* yyscan_t;
 #endif
 
+#define FBS_MAX_STR_CONST   4096
+#define FBS_SYMBOL_TABLE_SIZE   4096
+#define FBS_SYMBOL_CHILD_SIZE   10
+
+#define FBS_SYMBOL_INT      1
+#define FBS_SYMBOL_STR      2
+#define FBS_SYMBOL_NONTERM  3
+
+typedef struct fbs_symbol_s fbs_symbol; 
 typedef struct fbs_ctx_s fbs_ctx; 
+
 struct fbs_ctx_s {
-    yyscan_t    yyscanner;
+    yyscan_t        yyscanner;
     /* user defined start below... */
-    FILE       *log;
-    FILE       *log_err;
-    char       *lex_text;
-    char       *lex_text_ptr;
+    FILE *          log;
+    FILE *          log_err;
+    char *          lex_text;
+    char *          lex_text_ptr;
+    fbs_symbol **   symbol_table;
+    int             symbol_curr_id;
 }; 
+struct fbs_symbol_s {
+    int         type; 
+    int *       children; 
+    int         val;
+    fbs_ctx *   ctxp;
+};
 
 int reentrant_yyparse();
 fbs_ctx * fbs_ctx_init();
@@ -60,7 +78,11 @@ int fbs_ctx_desctroy(fbs_ctx *ctxp);
 #define FBS_LEX_ELT         6
 int fbs_lex_get_cmp_tokenum(const char *fbs_text);
 
-#define FBS_MAX_STR_CONST   4096
+void * fbs_alloc(size_t size);
+void fbs_free(void *ptr);
+
+fbs_symbol * fbs_create_symbol(fbs_ctx *ctxp, int type, int val);
+int fbs_regist_symbol(fbs_ctx *ctxp, fbs_symbol *symbol);
 
 #include <fbs_sql_parser.h>
 #endif/*FBS_SQL_CONTEXT*/
