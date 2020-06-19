@@ -36,7 +36,7 @@ extern char **environ;
 typedef void* yyscan_t;
 #endif
 
-#define FBS_MAX_STR_CONST   4096
+#define FBS_MAX_STR_CONST       4096
 #define FBS_SYMBOL_TABLE_SIZE   4096
 #define FBS_SYMBOL_CHILD_SIZE   10
 
