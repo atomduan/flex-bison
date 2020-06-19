@@ -175,8 +175,14 @@ int on_scalar_exp_su(fbs_ctx *ctxp, int sun)
 
 int on_scalar_unit_i(fbs_ctx *ctxp, int val)
 {
-    fprintf(ctxp->log, "on_scalar_unit_i is :%d\n", val);
-    return 0;
+    fprintf(ctxp->log, "bison>> on_scalar_unit_i is :%d\n", val);
+    fbs_symbol *vp = fbs_symbol_create(ctxp, FBS_SYMBOL_INT);
+    vp->val = val;
+    int vid = fbs_symbol_register(ctxp, vp);
+
+    fbs_symbol *np = fbs_symbol_create(ctxp, FBS_SYMBOL_NONTERM); 
+    fbs_symbol_add_child(np, vid);
+    return fbs_symbol_register(ctxp, np); 
 }
 
 int on_scalar_unit_n(fbs_ctx *ctxp, int nrf)
@@ -187,26 +193,51 @@ int on_scalar_unit_n(fbs_ctx *ctxp, int nrf)
 int on_name_ref_s(fbs_ctx *ctxp)
 {
     char * ss = ctxp->lex_text;
-    fprintf(ctxp->log, "on_name_ref_s :%s\n", ss);
-    return 0;
+    fprintf(ctxp->log, "bison>> on_name_ref_s :%s\n", ss);
+    fbs_symbol *sp = fbs_symbol_create(ctxp, FBS_SYMBOL_STR);
+    sp->yield = fbs_str_dup(ss);
+    int sid = fbs_symbol_register(ctxp, sp);
+
+    fbs_symbol *np = fbs_symbol_create(ctxp, FBS_SYMBOL_NONTERM); 
+    fbs_symbol_add_child(np, sid);
+    return fbs_symbol_register(ctxp, np);
 }
 
 int on_name_ref_ns(fbs_ctx *ctxp, int nrf)
 {
     char * ss = ctxp->lex_text;
-    fprintf(ctxp->log, "on_name_ref_ns :%s\n", ss);
-    return 0;
+    fprintf(ctxp->log, "bison>> on_name_ref_ns :%s\n", ss);
+    fbs_symbol *sp = fbs_symbol_create(ctxp, FBS_SYMBOL_STR);
+    sp->yield = fbs_str_dup(ss);
+    int sid = fbs_symbol_register(ctxp, sp);
+
+    fbs_symbol *np = fbs_symbol_create(ctxp, FBS_SYMBOL_NONTERM); 
+    fbs_symbol_add_child(np, nrf);
+    fbs_symbol_add_child(np, sid);
+    return fbs_symbol_register(ctxp, np);
 }
 
 int on_like_literal_s(fbs_ctx *ctxp)
 {
     char * ss = ctxp->lex_text;
-    fprintf(ctxp->log, "on_like_literal_s is :%s\n", ss);
-    return 0;
+    fprintf(ctxp->log, "bison>> on_like_literal_s is :%s\n", ss);
+    fbs_symbol *sp = fbs_symbol_create(ctxp, FBS_SYMBOL_STR);
+    sp->yield = fbs_str_dup(ss);
+    int sid = fbs_symbol_register(ctxp, sp);
+
+    fbs_symbol *np = fbs_symbol_create(ctxp, FBS_SYMBOL_NONTERM); 
+    fbs_symbol_add_child(np, sid);
+    return fbs_symbol_register(ctxp, np);
 }
 
 int on_like_literal_i(fbs_ctx *ctxp, int val)
 {
-    fprintf(ctxp->log, "on_like_literal_i is :%d\n", val);
-    return 0;
+    fprintf(ctxp->log, "bison>> on_like_literal_i is :%d\n", val);
+    fbs_symbol *vp = fbs_symbol_create(ctxp, FBS_SYMBOL_INT);
+    vp->val = val;
+    int vid = fbs_symbol_register(ctxp, vp);
+
+    fbs_symbol *np = fbs_symbol_create(ctxp, FBS_SYMBOL_NONTERM); 
+    fbs_symbol_add_child(np, vid);
+    return fbs_symbol_register(ctxp, np); 
 }

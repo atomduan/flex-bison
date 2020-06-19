@@ -53,10 +53,10 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %nonassoc UMINUS
 
 /* literal keyword tokens */
-%token FROM 
-%token LIKE
 %token SELECT
+%token FROM 
 %token WHERE 
+%token LIKE
 
 %nterm  <symid>     accept
 %nterm  <symid>     sql   

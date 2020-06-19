@@ -58,10 +58,12 @@ struct fbs_ctx_s {
     int             symbol_curr_id;
 }; 
 struct fbs_symbol_s {
+    fbs_ctx *   ctxp;
     int         type; 
     int *       children; 
     int         val;
-    fbs_ctx *   ctxp;
+    void *      yield;
+    int *       chld_ptr; 
 };
 
 int reentrant_yyparse();
@@ -81,8 +83,11 @@ int fbs_lex_get_cmp_tokenum(const char *fbs_text);
 void * fbs_alloc(size_t size);
 void fbs_free(void *ptr);
 
-fbs_symbol * fbs_create_symbol(fbs_ctx *ctxp, int type, int val);
-int fbs_regist_symbol(fbs_ctx *ctxp, fbs_symbol *symbol);
+fbs_symbol * fbs_symbol_create(fbs_ctx *ctxp, int type);
+int fbs_symbol_register(fbs_ctx *ctxp, fbs_symbol *symbol);
+void fbs_symbol_add_child(fbs_symbol *symbol, int child_symbol_id);
+
+char * fbs_str_dup(char * src);
 
 #include <fbs_sql_parser.h>
 #endif/*FBS_SQL_CONTEXT*/

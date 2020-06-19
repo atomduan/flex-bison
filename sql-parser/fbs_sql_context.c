@@ -78,18 +78,32 @@ int fbs_lex_get_cmp_tokenum(const char *fbs_text)
     return FBS_LEX_NUL;
 }
 
-fbs_symbol * fbs_create_symbol(fbs_ctx *ctxp, int type, int val) {
+fbs_symbol * fbs_symbol_create(fbs_ctx *ctxp, int type)
+{
     fbs_symbol * p = fbs_alloc(sizeof(fbs_symbol));
     p->type = type;
-    p->val = val;
     p->children = fbs_alloc(sizeof(int)*FBS_SYMBOL_CHILD_SIZE);
+    p->chld_ptr = p->children;
     p->ctxp = ctxp;
     return p; 
 }
 
-int fbs_regist_symbol(fbs_ctx *ctxp, fbs_symbol *symbol) {
+int fbs_symbol_register(fbs_ctx *ctxp, fbs_symbol *symbol)
+{
     int curr_id = ctxp->symbol_curr_id;
-    *ctxp->symbol_table[curr_id] = *symbol;
+    ctxp->symbol_table[curr_id] = symbol;
     ctxp->symbol_curr_id++;
     return ctxp->symbol_curr_id;
+}
+
+void fbs_symbol_add_child(fbs_symbol *symbol, int child_symbol_id)
+{
+   *symbol->chld_ptr++ = child_symbol_id; 
+}
+
+char * fbs_str_dup(char * src)
+{
+    char * res = fbs_alloc(strlen(src)+1);
+    memcpy(res, src, strlen(src));
+    return res;
 }
