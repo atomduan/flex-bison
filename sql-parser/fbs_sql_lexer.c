@@ -4,7 +4,7 @@
 
 #define YYEOF           0
 
-int _yylex(YYSTYPE * yylval_param, YYLTYPE * yylloc_param, fbs_ctx *ctxp, yyscan_t yyscanner);
+extern int _yylex(YYSTYPE * yylval_param, YYLTYPE * yylloc_param, fbs_ctx *ctxp, yyscan_t yyscanner);
 
 int main(int argc,char **argv)
 {
