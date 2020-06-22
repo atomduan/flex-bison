@@ -30,7 +30,6 @@
 extern char **environ;
 #define FBS_USE(VALUE)
 
-/* TODO:FLEX hecked! fbs_sql_lex.yy.h dup here!! need fix */
 #ifndef YY_TYPEDEF_YY_SCANNER_T
 #define YY_TYPEDEF_YY_SCANNER_T
 typedef void* yyscan_t;
