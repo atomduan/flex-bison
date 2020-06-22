@@ -15,10 +15,11 @@
 CMP                     (=|<>|<|>|<=|>=)
 INTNUM                  [0-9]+
 STRING                  [a-zA-Z0-9_-]+
-SPACE                   [[:space:]]+
-OTHER                   .|\n
+SPACE                   [ \t]+
 STR_FLAG                \"
 STR_CTNT                [^\"]
+NEW_LINE                \n
+OTHER                   .
 
 %x STRING_VAR
 
@@ -29,6 +30,8 @@ STR_CTNT                [^\"]
                              * and will read next token
                              * without return to yylex
                              * and yytext tmp will be discarded
+                             * NEW_LINE \n should be preserved
+                             * [ \t]+ should be trimed
                              */
                             fprintf(ctxp->log, " ");
                         }
@@ -75,6 +78,9 @@ STR_CTNT                [^\"]
                             fprintf(ctxp->log, "%s", yytext);
                         }
 {CMP}                   {   
+                            fprintf(ctxp->log, "%s", yytext);
+                        }
+{NEW_LINE}              {
                             fprintf(ctxp->log, "%s", yytext);
                         }
 {OTHER}                 {   

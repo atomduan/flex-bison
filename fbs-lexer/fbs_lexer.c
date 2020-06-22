@@ -12,7 +12,7 @@ int main(int argc,char **argv)
     FILE *log= ctxp->log;
     int yychar = 0;
 fbs_read_next:
-    fprintf(log, "fbs_lexer>> parse next token:\n");
+    fprintf(log, "fbs_lexer>> parse next token:\n\n");
     yychar = ctx_yylex(ctxp, yyscanner);
     if (yychar <= YYEOF) {
         fprintf(log, "fbs_lexer>> Now at end of input.\n");
