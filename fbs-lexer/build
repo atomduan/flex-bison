@@ -4,3 +4,8 @@ curr=$(cd `dirname $(which $0)`; pwd)
 cd $curr
 make clean
 make
+
+cd $curr
+if [ -f "fbs_lexer.bin" ]; then
+    cat patters.txt | ./fbs_lexer.bin
+fi

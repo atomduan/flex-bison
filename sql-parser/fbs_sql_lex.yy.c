@@ -1,6 +1,6 @@
-#line 2 "fbs_lex.yy.c"
+#line 2 "fbs_sql_lex.yy.c"
 
-#line 4 "fbs_lex.yy.c"
+#line 4 "fbs_sql_lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -572,8 +572,8 @@ static yyconst flex_int32_t yy_rule_can_match_eol[17] =
 
 static yyconst flex_int16_t yy_rule_linenum[16] =
     {   0,
-       26,   28,   33,   37,   44,   47,   50,   53,   56,   59,
-       62,   65,   68,   73,   77
+       32,   34,   39,   43,   51,   55,   59,   63,   67,   71,
+       75,   79,   84,   90,   95
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -583,13 +583,18 @@ static yyconst flex_int16_t yy_rule_linenum[16] =
 #define yymore() yymore_used_but_not_detected
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
-#line 1 "fbs.l"
+#line 1 "fbs_sql.l"
 #define YY_NO_INPUT 1
-#line 11 "fbs.l"
-#include <fbs_context.h>
-#define YY_DECL int ctx_yylex (fbs_ctx *ctxp, yyscan_t yyscanner)
+#line 12 "fbs_sql.l"
+#include <fbs_sql_context.h>
+#include <fbs_yy_gen.h>
+#ifndef YY_DECL
+#define YY_DECL_IS_OURS 1
+#define YY_DECL int _yylex (YYSTYPE * yylval_param,YYLTYPE * yylloc_param, fbs_ctx *ctxp, yyscan_t yyscanner)
+extern YY_DECL;
+#endif
 
-#line 593 "fbs_lex.yy.c"
+#line 598 "fbs_sql_lex.yy.c"
 
 #define INITIAL 0
 #define STRING_VAR 1
@@ -645,6 +650,10 @@ struct yyguts_t
     int yy_more_flag;
     int yy_more_len;
 
+    YYSTYPE * yylval_r;
+
+    YYLTYPE * yylloc_r;
+
     }; /* end struct yyguts_t */
 
 /* %if-c-only */
@@ -655,6 +664,12 @@ static int yy_init_globals (yyscan_t yyscanner );
 
 /* %if-reentrant */
 
+    /* This must go here because YYSTYPE and YYLTYPE are included
+     * from bison output in section 1.*/
+    #    define yylval yyg->yylval_r
+    
+    #    define yylloc yyg->yylloc_r
+    
 int yylex_init (yyscan_t* scanner);
 
 int yylex_init_extra (YY_EXTRA_TYPE user_defined,yyscan_t* scanner);
@@ -693,6 +708,15 @@ int yyget_lineno (yyscan_t yyscanner );
 void yyset_lineno (int line_number ,yyscan_t yyscanner );
 
 /* %if-bison-bridge */
+
+YYSTYPE * yyget_lval (yyscan_t yyscanner );
+
+void yyset_lval (YYSTYPE * yylval_param ,yyscan_t yyscanner );
+
+       YYLTYPE *yyget_lloc (yyscan_t yyscanner );
+    
+        void yyset_lloc (YYLTYPE * yylloc_param ,yyscan_t yyscanner );
+    
 /* %endif */
 
 /* Macros after this point can all be overridden by user definitions in
@@ -837,9 +861,11 @@ static int input (yyscan_t yyscanner );
 #define YY_DECL_IS_OURS 1
 /* %if-c-only Standard (non-C++) definition */
 
-extern int yylex (yyscan_t yyscanner);
+extern int yylex \
+               (YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner);
 
-#define YY_DECL int yylex (yyscan_t yyscanner)
+#define YY_DECL int yylex \
+               (YYSTYPE * yylval_param, YYLTYPE * yylloc_param , yyscan_t yyscanner)
 /* %endif */
 /* %if-c++-only C++ definition */
 /* %endif */
@@ -873,9 +899,13 @@ YY_DECL
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
 /* %% [7.0] user's declarations go here */
-#line 25 "fbs.l"
+#line 31 "fbs_sql.l"
 
-#line 879 "fbs_lex.yy.c"
+#line 905 "fbs_sql_lex.yy.c"
+
+    yylval = yylval_param;
+
+    yylloc = yylloc_param;
 
 	if ( !yyg->yy_init )
 		{
@@ -1004,12 +1034,12 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 26 "fbs.l"
+#line 32 "fbs_sql.l"
 /* SKIP, No action needed */
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 28 "fbs.l"
+#line 34 "fbs_sql.l"
 {
                             fprintf(ctxp->log, "lex>> hit pattern:[{STR_FLAG} START] --> token:[%s]\n", yytext);
                             ctxp->lex_text_ptr = ctxp->lex_text;
@@ -1019,7 +1049,7 @@ YY_RULE_SETUP
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 33 "fbs.l"
+#line 39 "fbs_sql.l"
 {
                             fprintf(ctxp->log, "lex>> hit pattern:[<STRING_VAR>{CTNT}] --> token:[%s]\n", yytext);
                             *ctxp->lex_text_ptr++ = yytext[0];
@@ -1027,101 +1057,114 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 37 "fbs.l"
+#line 43 "fbs_sql.l"
 {
                             fprintf(ctxp->log, "lex>> hit pattern:[<STRING_VAR>{STR_FLAG} END] --> token:[%s]\n", yytext);
                             BEGIN(INITIAL);
                             *ctxp->lex_text_ptr = '\0';
                             fprintf(ctxp->log, "lex>> hit pattern:[<STRING_VAR>] RES --> token:[%s]\n", ctxp->lex_text);
+                            return STRING;
                         }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 44 "fbs.l"
+#line 51 "fbs_sql.l"
 {   
                             fprintf(ctxp->log, "lex>> hit pattern:[FROM] --> token:[%s]\n", yytext);
+                            return FROM;
                         }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 47 "fbs.l"
+#line 55 "fbs_sql.l"
 {   
                             fprintf(ctxp->log, "lex>> hit pattern:[LIKE] --> token:[%s]\n", yytext); 
+                            return LIKE;
                         }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 50 "fbs.l"
+#line 59 "fbs_sql.l"
 {   
                             fprintf(ctxp->log, "lex>> hit pattern:[SELECT] --> token:[%s]\n", yytext); 
+                            return SELECT;
                         }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 53 "fbs.l"
+#line 63 "fbs_sql.l"
 {   
                             fprintf(ctxp->log, "lex>> hit pattern:[WHERE] --> token:[%s]\n", yytext); 
+                            return WHERE;
                         }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 56 "fbs.l"
+#line 67 "fbs_sql.l"
 {   
                             fprintf(ctxp->log, "lex>> hit pattern:[OR] --> token:[%s]\n", yytext); 
+                            return OR;
                         }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 59 "fbs.l"
+#line 71 "fbs_sql.l"
 {   
                             fprintf(ctxp->log, "lex>> hit pattern:[AND] --> token:[%s]\n", yytext); 
+                            return AND;
                         }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 62 "fbs.l"
+#line 75 "fbs_sql.l"
 {   
                             fprintf(ctxp->log, "lex>> hit pattern:[NOT] --> token:[%s]\n", yytext); 
+                            return NOT;
                         }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 65 "fbs.l"
+#line 79 "fbs_sql.l"
 {   
                             fprintf(ctxp->log, "lex>> hit pattern:[INTNUM] --> token:[%s]\n", yytext); 
+                            yylval_param->intval = atoi(yytext);
+                            return INTNUM;
                         }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 68 "fbs.l"
+#line 84 "fbs_sql.l"
 {   
                             fprintf(ctxp->log, "lex>> hit pattern:[STRING] --> token:[%s]\n", yytext); 
                             memset(ctxp->lex_text, 0, FBS_MAX_STR_CONST);
                             memcpy(ctxp->lex_text, yytext, strlen(yytext));
+                            return STRING;
                         }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 73 "fbs.l"
+#line 90 "fbs_sql.l"
 {   
                             fprintf(ctxp->log, "lex>> hit pattern:[{CMP}] --> token:[%s]\n", yytext); 
-                            return fbs_lex_get_cmp_tokenum(yytext);
+                            yylval_param->tokenum = fbs_lex_get_cmp_tokenum(yytext);
+                            return COMPARISON;
                         }
 	YY_BREAK
 case 15:
 /* rule 15 can match eol */
 YY_RULE_SETUP
-#line 77 "fbs.l"
+#line 95 "fbs_sql.l"
 {   
                             fprintf(ctxp->log, "lex>> hit pattern:[{OTHER}] --> token:[%s]\n", yytext); 
+                            return (int)*yytext;
                         }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 80 "fbs.l"
+#line 99 "fbs_sql.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 1125 "fbs_lex.yy.c"
+#line 1168 "fbs_sql_lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(STRING_VAR):
 	yyterminate();
@@ -2188,6 +2231,31 @@ void yyset_debug (int  bdebug , yyscan_t yyscanner)
 /* Accessor methods for yylval and yylloc */
 
 /* %if-bison-bridge */
+
+YYSTYPE * yyget_lval  (yyscan_t yyscanner)
+{
+    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+    return yylval;
+}
+
+void yyset_lval (YYSTYPE *  yylval_param , yyscan_t yyscanner)
+{
+    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+    yylval = yylval_param;
+}
+
+YYLTYPE *yyget_lloc  (yyscan_t yyscanner)
+{
+    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+    return yylloc;
+}
+    
+void yyset_lloc (YYLTYPE *  yylloc_param , yyscan_t yyscanner)
+{
+    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+    yylloc = yylloc_param;
+}
+    
 /* %endif */
 
 /* User-visible API */
@@ -2378,7 +2446,7 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 /* %ok-for-header */
 
-#line 80 "fbs.l"
+#line 99 "fbs_sql.l"
 
 
 

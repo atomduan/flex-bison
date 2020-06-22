@@ -2,9 +2,9 @@
 #define yyHEADER_H 1
 #define yyIN_HEADER 1
 
-#line 6 "fbs_lex.yy.h"
+#line 6 "fbs_sql_lex.yy.h"
 
-#line 8 "fbs_lex.yy.h"
+#line 8 "fbs_sql_lex.yy.h"
 
 #define  YY_INT_ALIGNED short int
 
@@ -356,6 +356,15 @@ int yyget_lineno (yyscan_t yyscanner );
 void yyset_lineno (int line_number ,yyscan_t yyscanner );
 
 /* %if-bison-bridge */
+
+YYSTYPE * yyget_lval (yyscan_t yyscanner );
+
+void yyset_lval (YYSTYPE * yylval_param ,yyscan_t yyscanner );
+
+       YYLTYPE *yyget_lloc (yyscan_t yyscanner );
+    
+        void yyset_lloc (YYLTYPE * yylloc_param ,yyscan_t yyscanner );
+    
 /* %endif */
 
 /* Macros after this point can all be overridden by user definitions in
@@ -415,9 +424,11 @@ static int yy_flex_strlen (yyconst char * ,yyscan_t yyscanner);
 #define YY_DECL_IS_OURS 1
 /* %if-c-only Standard (non-C++) definition */
 
-extern int yylex (yyscan_t yyscanner);
+extern int yylex \
+               (YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner);
 
-#define YY_DECL int yylex (yyscan_t yyscanner)
+#define YY_DECL int yylex \
+               (YYSTYPE * yylval_param, YYLTYPE * yylloc_param , yyscan_t yyscanner)
 /* %endif */
 /* %if-c++-only C++ definition */
 /* %endif */
@@ -447,9 +458,9 @@ extern int yylex (yyscan_t yyscanner);
 #undef YY_DECL
 #endif
 
-#line 80 "fbs.l"
+#line 99 "fbs_sql.l"
 
 
-#line 454 "fbs_lex.yy.h"
+#line 465 "fbs_sql_lex.yy.h"
 #undef yyIN_HEADER
 #endif /* yyHEADER_H */
