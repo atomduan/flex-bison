@@ -58,7 +58,7 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %token LIKE
 
 %nterm  <symid>     accept
-%nterm  <symid>     sql  
+%nterm  <symid>     sql
 %nterm  <symid>     statement_list
 %nterm  <symid>     statement
 %nterm  <symid>     select_stmt
@@ -87,34 +87,28 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 /* --------------------------------------------------------------------- */
 /* Grammar Rules Section */
 %%
-accept:
-        sql[sql] {
+sql:
+        /* empty */ {
             FBS_USE(@$);
             FBS_USE(ctxp);
         }
-    ;
-
-sql:   
-        /* empty */ {
-            FBS_USE(ctxp);
-        }
     |   statement_list[stl] {
-            FBS_USE(ctxp);
+            /* nothing to do */
         }
     ;
 
 statement_list:
         statement[stm] ';' {
-            FBS_USE(ctxp);
+            /* nothing to do */
         }
     |   statement_list[stl] statement[stm] ';' {
-            FBS_USE(ctxp);
+            /* nothing to do */
         }
     ;
 
 statement:
         select_stmt[sls] {
-            FBS_USE(ctxp);
+            /* nothing to do */
         }
     ;
 

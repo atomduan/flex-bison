@@ -59,8 +59,8 @@ fbs_symbol * fbs_symbol_create(fbs_ctx *ctxp, int type)
 {
     fbs_symbol * p = fbs_alloc(sizeof(fbs_symbol));
     p->type = type;
-    p->children = fbs_alloc(sizeof(int)*FBS_SYMBOL_CHILD_SIZE);
-    p->chld_ptr = p->children;
+    p->child = fbs_alloc(sizeof(int)*FBS_SYMBOL_CHILD_SIZE);
+    p->child_ptr = p->child;
     p->ctxp = ctxp;
     return p; 
 }
@@ -75,7 +75,7 @@ int fbs_symbol_register(fbs_ctx *ctxp, fbs_symbol *symbol)
 
 void fbs_symbol_add_child(fbs_symbol *symbol, int child_symbol_id)
 {
-   *symbol->chld_ptr++ = child_symbol_id; 
+   *symbol->child_ptr++ = child_symbol_id; 
 }
 
 char * fbs_str_dup(char * src)
