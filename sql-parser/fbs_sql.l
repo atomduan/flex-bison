@@ -21,89 +21,138 @@ extern YY_DECL;
 CMP             (=|<>|<|>|<=|>=)
 INTNUM          [0-9]+
 STRING          [a-zA-Z0-9_-]+
-SPACE           [[:space:]]+
-OTHER           .|\n
+SPACE           [ \t]+
+NEW_LINE        \n
+OTHER           .
 STR_FLAG        \"
 STR_CTNT        [^\"]
 
-%x STRING_VAR
+COMMENT_BLOCK_BEGIN_FLAG      (\/\*)
+COMMENT_BLOCK_END_FLAG        (\*\/)
+COMMENT_BLOCK_CTNT            (.|\n)
+
+COMMENT_LINE_FLAG       (\/\/|#)
+COMMENT_LINE_CTNT       .
+
+%x STRING_SC
+%x COMMENT_BLOCK_SC
+%x COMMENT_LINE_SC
 
 %%
-{SPACE}     /* SKIP, No action needed */
+{COMMENT_BLOCK_BEGIN_FLAG} {
+    BEGIN(COMMENT_BLOCK_SC);
+}
+<COMMENT_BLOCK_SC>{COMMENT_BLOCK_END_FLAG} {
+    BEGIN(INITIAL);
+}
+<COMMENT_BLOCK_SC>{COMMENT_BLOCK_CTNT} {
+    /* skip all comment block */
+}
+
+{COMMENT_LINE_FLAG} {
+    BEGIN(COMMENT_LINE_SC);
+}
+<COMMENT_LINE_SC>{NEW_LINE} {
+    BEGIN(INITIAL);
+}
+<COMMENT_LINE_SC>{OTHER} {
+    /* skip all comment line */
+}
+
+{SPACE}|{NEW_LINE} {
+    /* skip white space */
+}
 
 {STR_FLAG} {
-    lex_log(ctxp, "{STR_FLAG}", yytext);
+    fbs_lex_log(ctxp, "{STR_FLAG}", yytext);
     ctxp->lex_text_ptr = ctxp->lex_text;
-    BEGIN(STRING_VAR);
+    BEGIN(STRING_SC);
 }
-<STRING_VAR>{STR_CTNT} {
-    lex_log(ctxp, "{STRING_VAR}_{STR_CTNT}", yytext);
+<STRING_SC>{STR_CTNT} {
+    fbs_lex_log(ctxp, "{STRING_SC}_{STR_CTNT}", yytext);
     *ctxp->lex_text_ptr++ = yytext[0];
 }
-<STRING_VAR>{STR_FLAG} {
-    lex_log(ctxp, "{STRING_VAR}_{STR_FLAG}", yytext);
+<STRING_SC>{STR_FLAG} {
+    fbs_lex_log(ctxp, "{STRING_SC}_{STR_FLAG}", yytext);
     BEGIN(INITIAL);
     *ctxp->lex_text_ptr = '\0';
-    lex_log(ctxp, "{STRING_VAR}_RES", yytext);
+    fbs_lex_log(ctxp, "{STRING_SC}_RES", yytext);
     return STRING;
 }
 
 "FROM" {   
-    lex_log(ctxp, "FROM", yytext);
+    fbs_lex_log(ctxp, "FROM", yytext);
     return FROM;
 }
 
 "LIKE" {   
-    lex_log(ctxp, "LIKE", yytext);
+    fbs_lex_log(ctxp, "LIKE", yytext);
     return LIKE;
 }
 
 "SELECT" {   
-    lex_log(ctxp, "SELECT", yytext);
+    fbs_lex_log(ctxp, "SELECT", yytext);
     return SELECT;
 }
 
 "WHERE" {   
-    lex_log(ctxp, "WHERE", yytext);
+    fbs_lex_log(ctxp, "WHERE", yytext);
     return WHERE;
 }
 
 "OR" {   
-    lex_log(ctxp, "OR", yytext);
+    fbs_lex_log(ctxp, "OR", yytext);
     return OR;
 }
 
 "AND" {   
-    lex_log(ctxp, "AND", yytext);
+    fbs_lex_log(ctxp, "AND", yytext);
     return AND;
 }
 
 "NOT" {   
-    lex_log(ctxp, "NOT", yytext);
+    fbs_lex_log(ctxp, "NOT", yytext);
     return NOT;
 }
 
 {INTNUM} {   
-    lex_log(ctxp, "{INTNUM}", yytext);
+    fbs_lex_log(ctxp, "{INTNUM}", yytext);
     yylval_param->intval = atoi(yytext);
     return INTNUM;
 }
 
 {STRING} {   
-    lex_log(ctxp, "{STRING}", yytext);
+    fbs_lex_log(ctxp, "{STRING}", yytext);
     memset(ctxp->lex_text, 0, FBS_MAX_STR_CONST);
     memcpy(ctxp->lex_text, yytext, strlen(yytext));
     return STRING;
 }
 
 {CMP} {   
-    lex_log(ctxp, "{CMP}", yytext);
-    yylval_param->tokenum = fbs_lex_get_cmp_tokenum(yytext);
+    fbs_lex_log(ctxp, "{CMP}", yytext);
+    if (0 == strcmp("=", yytext)) {
+        yylval_param->tokenum = FBS_LEX_EQ;
+    }
+    if (0 == strcmp(">", yytext)) {
+        yylval_param->tokenum = FBS_LEX_GT;
+    }
+    if (0 == strcmp("<", yytext)) {
+        yylval_param->tokenum = FBS_LEX_LT;
+    }
+    if (0 == strcmp("<>", yytext)) {
+        yylval_param->tokenum = FBS_LEX_NEQ;
+    }
+    if (0 == strcmp("<=", yytext)) {
+        yylval_param->tokenum = FBS_LEX_ELT;
+    }
+    if (0 == strcmp(">=", yytext)) {
+        yylval_param->tokenum = FBS_LEX_EGT;
+    }
     return COMPARISON;
 }
 
 {OTHER} {   
-    lex_log(ctxp, "{OTHER}", yytext);
+    fbs_lex_log(ctxp, "{OTHER}", yytext);
     return (int)*yytext;
 }
 %%

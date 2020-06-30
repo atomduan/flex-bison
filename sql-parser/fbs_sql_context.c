@@ -55,29 +55,6 @@ int fbs_ctx_desctroy(fbs_ctx *ctxp)
     return 0;
 }
 
-int fbs_lex_get_cmp_tokenum(const char *fbs_text)
-{
-    if (0 == strcmp("=", fbs_text)) {
-        return FBS_LEX_EQ;
-    }
-    if (0 == strcmp(">", fbs_text)) {
-        return FBS_LEX_GT;
-    }
-    if (0 == strcmp("<", fbs_text)) {
-        return FBS_LEX_LT;
-    }
-    if (0 == strcmp("<>", fbs_text)) {
-        return FBS_LEX_NEQ;
-    }
-    if (0 == strcmp("<=", fbs_text)) {
-        return FBS_LEX_ELT;
-    }
-    if (0 == strcmp(">=", fbs_text)) {
-        return FBS_LEX_EGT;
-    }
-    return FBS_LEX_NUL;
-}
-
 fbs_symbol * fbs_symbol_create(fbs_ctx *ctxp, int type)
 {
     fbs_symbol * p = fbs_alloc(sizeof(fbs_symbol));
@@ -108,7 +85,7 @@ char * fbs_str_dup(char * src)
     return res;
 }
 
-void lex_log(fbs_ctx *ctxp, char *tkn, char *yt)
+void fbs_lex_log(fbs_ctx *ctxp, char *tkn, char *yt)
 {
     fprintf(ctxp->log, "lex>> hit pattern:[%s] --> token:[%s]\n", tkn, yt);
 }

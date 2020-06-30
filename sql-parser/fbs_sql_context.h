@@ -78,7 +78,6 @@ int fbs_ctx_desctroy(fbs_ctx *ctxp);
 #define FBS_LEX_NEQ         4
 #define FBS_LEX_EGT         5
 #define FBS_LEX_ELT         6
-int fbs_lex_get_cmp_tokenum(const char *fbs_text);
 
 void * fbs_alloc(size_t size);
 void fbs_free(void *ptr);
@@ -87,7 +86,7 @@ fbs_symbol * fbs_symbol_create(fbs_ctx *ctxp, int type);
 int fbs_symbol_register(fbs_ctx *ctxp, fbs_symbol *symbol);
 void fbs_symbol_add_child(fbs_symbol *symbol, int child_symbol_id);
 char * fbs_str_dup(char * src);
-void lex_log(fbs_ctx *ctxp, char *tkn, char *yt);
+void fbs_lex_log(fbs_ctx *ctxp, char *tkn, char *yt);
 
 #include <fbs_sql_parser.h>
 #endif/*FBS_SQL_CONTEXT*/

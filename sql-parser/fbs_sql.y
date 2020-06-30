@@ -16,7 +16,6 @@ typedef struct YYLTYPE {
 } YYLTYPE;
 union YYSTYPE {
     int     intval;
-    double  floatval;
     int     tokenum;
     int     symid;
 };
@@ -79,7 +78,6 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %nterm  <symid>     like_literal
 
 %destructor { printf("destructor intval, do nothing.\n"); } <intval>
-%destructor { printf("destructor floatval, do nothing.\n"); } <floatval>
 %destructor { printf("destructor tokenum, do nothing.\n"); } <tokenum>
 %destructor { printf("destructor symid, do nothing.\n"); } <symid>
 %destructor { printf("Discarding tagless symbol.\n"); } <>
@@ -91,179 +89,179 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %%
 accept:
         sql[sql] {
-            FBS_USE(@$); FBS_USE(ctxp);
-            $$ = on_accept(ctxp,$[sql]);
+            FBS_USE(@$);
+            FBS_USE(ctxp);
         }
     ;
 
 sql:   
         /* empty */ {
-            $$ = on_sql_empty(ctxp);
+            FBS_USE(ctxp);
         }
     |   statement_list[stl] {
-            $$ = on_sql_sl(ctxp, $[stl]);
+            FBS_USE(ctxp);
         }
     ;
 
 statement_list:
         statement[stm] ';' {
-            $$ = on_statement_list_s(ctxp, $[stm]);
+            FBS_USE(ctxp);
         }
     |   statement_list[stl] statement[stm] ';' {
-            $$ = on_statement_list_ss(ctxp, $[stl], $[stm]);
+            FBS_USE(ctxp);
         }
     ;
 
 statement:
         select_stmt[sls] {
-            $$ = on_statement_ss(ctxp, $[sls]);
+            FBS_USE(ctxp);
         }
     ;
 
 select_stmt:
         SELECT selection[sel] from_clause[fcl] where_clause[wcl] {
-            $$ = on_select_stmt_ssfw(ctxp, $[sel], $[fcl], $[wcl]);
+            FBS_USE(ctxp);
         }
     ;
 
 selection:
         scalar_exp_list[sel] {
-            $$ = on_selection_sel(ctxp, $[sel]);
+            FBS_USE(ctxp);
         }
     |   '*' {
-            $$ = on_selection_all(ctxp);
+            FBS_USE(ctxp);
         }
     ;
 
 scalar_exp_list:
         scalar_exp {
-            $$ = on_scalar_exp_list_s(ctxp);
+            FBS_USE(ctxp);
         }
     |   scalar_exp_list[sel] ',' scalar_exp[sep] {
-            $$ = on_scalar_exp_list_ss(ctxp,$[sel], $[sep]);
+            FBS_USE(ctxp);
         }
     ;
 
 from_clause:
         FROM table_ref_list[trl] {
-            $$ = on_from_clause_ft(ctxp, $[trl]);
+            FBS_USE(ctxp);
         }
     ;
 
 where_clause:
         /* empty */ {
-            $$ = on_where_clause_empty(ctxp);
+            FBS_USE(ctxp);
         }
     |   WHERE search_condition[scd] {
-            $$ = on_where_clause_ws(ctxp, $[scd]);
+            FBS_USE(ctxp);
         }
     ;
 
 table_ref_list:
         table_ref[trf] {
-            $$ = on_table_ref_list_t(ctxp, $[trf]);
+            FBS_USE(ctxp);
         }
     |   table_ref_list[trl] ',' table_ref[trf] {
-            $$ = on_table_ref_list_tt(ctxp, $[trl], $[trf]);
+            FBS_USE(ctxp);
         }
     ;
 
 table_ref:
         name_ref[nrf] {
-            $$ = on_table_ref_n(ctxp, $[nrf]);
+            FBS_USE(ctxp);
         }
     ;
 
 search_condition:
         search_condition[sdl] OR search_condition[sdr]  {
-            $$ = on_search_condition_sos(ctxp, $[sdl], $[sdr]);
+            FBS_USE(ctxp);
         }
     |   search_condition[sdl] AND search_condition[sdr] {
-            $$ = on_search_condition_sas(ctxp, $[sdl], $[sdr]);
+            FBS_USE(ctxp);
         }
     |   '(' search_condition[sdt] ')' {
-            $$ = on_search_condition_s(ctxp, $[sdt]);
+            FBS_USE(ctxp);
         }
     |   predicate[pdt] {
-            $$ = on_search_condition_p(ctxp, $[pdt]);
+            FBS_USE(ctxp);
         }
     ;
 
 predicate:
         comparison_predicate[cpd] {
-            $$ = on_predicate_c(ctxp, $[cpd]);
+            FBS_USE(ctxp);
         }
     |   like_predicate[lpd] {
-            $$ = on_predicate_l(ctxp, $[lpd]);
+            FBS_USE(ctxp);
         }
     ;
 
 comparison_predicate:
         scalar_exp[sel] COMPARISON scalar_exp[ser] {
-            $$ = on_comparison_predicate_scs(ctxp, $[sel], $[ser]);
+            FBS_USE(ctxp);
         }
     ;
 
 like_predicate:
         scalar_exp[sep] NOT LIKE like_literal[lkl] {
-            $$ = on_like_predicate_snll(ctxp, $[sep], $[lkl]);
+            FBS_USE(ctxp);
         }
     |   scalar_exp[sep] LIKE like_literal[lkl] {
-            $$ = on_like_predicate_sll(ctxp, $[sep], $[lkl]);
+            FBS_USE(ctxp);
         }
     ;
 
 scalar_exp:
         scalar_exp[sel] '+' scalar_exp[ser] {
-            $$ = on_scalar_exp_sps(ctxp, $[sel], $[ser]);
+            FBS_USE(ctxp);
         }
     |   scalar_exp[sel] '-' scalar_exp[ser] {
-            $$ = on_scalar_exp_sss(ctxp, $[sel], $[ser]);
+            FBS_USE(ctxp);
         }
     |   scalar_exp[sel] '*' scalar_exp[ser] {
-            $$ = on_scalar_exp_sms(ctxp, $[sel], $[ser]);
+            FBS_USE(ctxp);
         }
     |   scalar_exp[sel] '/' scalar_exp[ser] {
-            $$ = on_scalar_exp_sds(ctxp, $[sel], $[ser]);
+            FBS_USE(ctxp);
         }
     |   '+' scalar_exp[sep] %prec UMINUS {
-            $$ = on_scalar_exp_aspu(ctxp, $[sep]);
+            FBS_USE(ctxp);
         }
     |   '-' scalar_exp[sep] %prec UMINUS {
-            $$ = on_scalar_exp_sspu(ctxp, $[sep]);
+            FBS_USE(ctxp);
         }
     |   '(' scalar_exp[sep] ')' {
-            $$ = on_scalar_exp_se(ctxp, $[sep]);
+            FBS_USE(ctxp);
         }
     |   scalar_unit[sun] {
-            $$ = on_scalar_exp_su(ctxp, $[sun]);
+            FBS_USE(ctxp);
         }
     ;
 
 scalar_unit:
         INTNUM[val] {
-            $$ = on_scalar_unit_i(ctxp, $[val]);
+            FBS_USE(ctxp);
         }
     |   name_ref[nrf] {
-            $$ = on_scalar_unit_n(ctxp, $[nrf]);
+            FBS_USE(ctxp);
         }
     ;
 
 name_ref:
         STRING {
-            $$ = on_name_ref_s(ctxp);
+            FBS_USE(ctxp);
         }
     |   name_ref[nrf] '.' STRING {
-            $$ = on_name_ref_ns(ctxp, $[nrf]);
+            FBS_USE(ctxp);
         }
     ;
 
 like_literal:
         STRING {
-            $$ = on_like_literal_s(ctxp);
+            FBS_USE(ctxp);
         }
     |   INTNUM[val] {
-            $$ = on_like_literal_i(ctxp, $[val]);
+            FBS_USE(ctxp);
         }
     ;
 %%
