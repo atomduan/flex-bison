@@ -32,78 +32,78 @@ STR_CTNT        [^\"]
 {SPACE}     /* SKIP, No action needed */
 
 {STR_FLAG} {
-    lex_log(ctxp,"{STR_FLAG}", yytext);
+    lex_log(ctxp, "{STR_FLAG}", yytext);
     ctxp->lex_text_ptr = ctxp->lex_text;
     BEGIN(STRING_VAR);
 }
 <STRING_VAR>{STR_CTNT} {
-    lex_log(ctxp,"{STRING_VAR}_{STR_CTNT}", yytext);
+    lex_log(ctxp, "{STRING_VAR}_{STR_CTNT}", yytext);
     *ctxp->lex_text_ptr++ = yytext[0];
 }
 <STRING_VAR>{STR_FLAG} {
-    lex_log(ctxp,"{STRING_VAR}_{STR_FLAG}", yytext);
+    lex_log(ctxp, "{STRING_VAR}_{STR_FLAG}", yytext);
     BEGIN(INITIAL);
     *ctxp->lex_text_ptr = '\0';
-    lex_log(ctxp,"{STRING_VAR}_RES", yytext);
+    lex_log(ctxp, "{STRING_VAR}_RES", yytext);
     return STRING;
 }
 
 "FROM" {   
-    lex_log(ctxp,"FROM", yytext);
+    lex_log(ctxp, "FROM", yytext);
     return FROM;
 }
 
 "LIKE" {   
-    lex_log(ctxp,"LIKE", yytext);
+    lex_log(ctxp, "LIKE", yytext);
     return LIKE;
 }
 
 "SELECT" {   
-    lex_log(ctxp,"SELECT", yytext);
+    lex_log(ctxp, "SELECT", yytext);
     return SELECT;
 }
 
 "WHERE" {   
-    lex_log(ctxp,"WHERE", yytext);
+    lex_log(ctxp, "WHERE", yytext);
     return WHERE;
 }
 
 "OR" {   
-    lex_log(ctxp,"OR", yytext);
+    lex_log(ctxp, "OR", yytext);
     return OR;
 }
 
 "AND" {   
-    lex_log(ctxp,"AND", yytext);
+    lex_log(ctxp, "AND", yytext);
     return AND;
 }
 
 "NOT" {   
-    lex_log(ctxp,"NOT", yytext);
+    lex_log(ctxp, "NOT", yytext);
     return NOT;
 }
 
 {INTNUM} {   
-    lex_log(ctxp,"{INTNUM}", yytext);
+    lex_log(ctxp, "{INTNUM}", yytext);
     yylval_param->intval = atoi(yytext);
     return INTNUM;
 }
 
 {STRING} {   
-    lex_log(ctxp,"{STRING}", yytext);
+    lex_log(ctxp, "{STRING}", yytext);
     memset(ctxp->lex_text, 0, FBS_MAX_STR_CONST);
     memcpy(ctxp->lex_text, yytext, strlen(yytext));
     return STRING;
 }
 
 {CMP} {   
-    lex_log(ctxp,"{CMP}", yytext);
+    lex_log(ctxp, "{CMP}", yytext);
     yylval_param->tokenum = fbs_lex_get_cmp_tokenum(yytext);
     return COMPARISON;
 }
 
 {OTHER} {   
-    lex_log(ctxp,"{OTHER}", yytext);
+    lex_log(ctxp, "{OTHER}", yytext);
     return (int)*yytext;
 }
 %%
