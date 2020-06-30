@@ -1,6 +1,9 @@
+/* ax 
+ * asdfsd 
+ */
 select * from personal_cert_20 where personal_cert_id = "46161896182164905"\G
 select * from personal_cert_20 where personal_cert_id = "46161896182164905"\G
+#select * from personal_cert_20 where personal_cert_id = "46161896182164905"\G
 select * from personal_cert_20 where personal_cert_id = "46161896182164905"\G
-select * from personal_cert_20 where personal_cert_id = "46161896182164905"\G
-select * from personal_cert_20 where personal_cert_id = "46161896182164905"\G
+//select * from personal_cert_20 where personal_cert_id = "46161896182164905"\G
 select * from personal_cert_20 where personal_cert_id = "46161896182164905"\G
