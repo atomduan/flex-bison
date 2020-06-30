@@ -107,3 +107,8 @@ char * fbs_str_dup(char * src)
     memcpy(res, src, strlen(src));
     return res;
 }
+
+void lex_log(fbs_ctx *ctxp, char *tkn, char *yt)
+{
+    fprintf(ctxp->log, "lex>> hit pattern:[%s] --> token:[%s]\n", tkn, yt);
+}

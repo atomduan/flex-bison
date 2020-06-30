@@ -18,82 +18,92 @@ extern YY_DECL;
 #endif
 %}
 
-CMP                     (=|<>|<|>|<=|>=)
-INTNUM                  [0-9]+
-STRING                  [a-zA-Z0-9_-]+
-SPACE                   [[:space:]]+
-OTHER                   .|\n
-STR_FLAG                \"
-STR_CTNT                [^\"]
+CMP             (=|<>|<|>|<=|>=)
+INTNUM          [0-9]+
+STRING          [a-zA-Z0-9_-]+
+SPACE           [[:space:]]+
+OTHER           .|\n
+STR_FLAG        \"
+STR_CTNT        [^\"]
 
 %x STRING_VAR
 
 %%
-{SPACE}                 /* SKIP, No action needed */
+{SPACE}     /* SKIP, No action needed */
 
-{STR_FLAG}              {
-                            fprintf(ctxp->log, "lex>> hit pattern:[{STR_FLAG} START] --> token:[%s]\n", yytext);
-                            ctxp->lex_text_ptr = ctxp->lex_text;
-                            BEGIN(STRING_VAR);
-                        }
-<STRING_VAR>{STR_CTNT}  {
-                            fprintf(ctxp->log, "lex>> hit pattern:[<STRING_VAR>{CTNT}] --> token:[%s]\n", yytext);
-                            *ctxp->lex_text_ptr++ = yytext[0];
-                        }
-<STRING_VAR>{STR_FLAG}  {
-                            fprintf(ctxp->log, "lex>> hit pattern:[<STRING_VAR>{STR_FLAG} END] --> token:[%s]\n", yytext);
-                            BEGIN(INITIAL);
-                            *ctxp->lex_text_ptr = '\0';
-                            fprintf(ctxp->log, "lex>> hit pattern:[<STRING_VAR>] RES --> token:[%s]\n", ctxp->lex_text);
-                            return STRING;
-                        }
+{STR_FLAG} {
+    lex_log(ctxp,"{STR_FLAG}", yytext);
+    ctxp->lex_text_ptr = ctxp->lex_text;
+    BEGIN(STRING_VAR);
+}
+<STRING_VAR>{STR_CTNT} {
+    lex_log(ctxp,"{STRING_VAR}_{STR_CTNT}", yytext);
+    *ctxp->lex_text_ptr++ = yytext[0];
+}
+<STRING_VAR>{STR_FLAG} {
+    lex_log(ctxp,"{STRING_VAR}_{STR_FLAG}", yytext);
+    BEGIN(INITIAL);
+    *ctxp->lex_text_ptr = '\0';
+    lex_log(ctxp,"{STRING_VAR}_RES", yytext);
+    return STRING;
+}
 
-"FROM"                  {   
-                            fprintf(ctxp->log, "lex>> hit pattern:[FROM] --> token:[%s]\n", yytext);
-                            return FROM;
-                        }
-"LIKE"                  {   
-                            fprintf(ctxp->log, "lex>> hit pattern:[LIKE] --> token:[%s]\n", yytext); 
-                            return LIKE;
-                        }
-"SELECT"                {   
-                            fprintf(ctxp->log, "lex>> hit pattern:[SELECT] --> token:[%s]\n", yytext); 
-                            return SELECT;
-                        }
-"WHERE"                 {   
-                            fprintf(ctxp->log, "lex>> hit pattern:[WHERE] --> token:[%s]\n", yytext); 
-                            return WHERE;
-                        }
-"OR"                    {   
-                            fprintf(ctxp->log, "lex>> hit pattern:[OR] --> token:[%s]\n", yytext); 
-                            return OR;
-                        }
-"AND"                   {   
-                            fprintf(ctxp->log, "lex>> hit pattern:[AND] --> token:[%s]\n", yytext); 
-                            return AND;
-                        }
-"NOT"                   {   
-                            fprintf(ctxp->log, "lex>> hit pattern:[NOT] --> token:[%s]\n", yytext); 
-                            return NOT;
-                        }
-{INTNUM}                {   
-                            fprintf(ctxp->log, "lex>> hit pattern:[INTNUM] --> token:[%s]\n", yytext); 
-                            yylval_param->intval = atoi(yytext);
-                            return INTNUM;
-                        }
-{STRING}                {   
-                            fprintf(ctxp->log, "lex>> hit pattern:[STRING] --> token:[%s]\n", yytext); 
-                            memset(ctxp->lex_text, 0, FBS_MAX_STR_CONST);
-                            memcpy(ctxp->lex_text, yytext, strlen(yytext));
-                            return STRING;
-                        }
-{CMP}                   {   
-                            fprintf(ctxp->log, "lex>> hit pattern:[{CMP}] --> token:[%s]\n", yytext); 
-                            yylval_param->tokenum = fbs_lex_get_cmp_tokenum(yytext);
-                            return COMPARISON;
-                        }
-{OTHER}                 {   
-                            fprintf(ctxp->log, "lex>> hit pattern:[{OTHER}] --> token:[%s]\n", yytext); 
-                            return (int)*yytext;
-                        }
+"FROM" {   
+    lex_log(ctxp,"FROM", yytext);
+    return FROM;
+}
+
+"LIKE" {   
+    lex_log(ctxp,"LIKE", yytext);
+    return LIKE;
+}
+
+"SELECT" {   
+    lex_log(ctxp,"SELECT", yytext);
+    return SELECT;
+}
+
+"WHERE" {   
+    lex_log(ctxp,"WHERE", yytext);
+    return WHERE;
+}
+
+"OR" {   
+    lex_log(ctxp,"OR", yytext);
+    return OR;
+}
+
+"AND" {   
+    lex_log(ctxp,"AND", yytext);
+    return AND;
+}
+
+"NOT" {   
+    lex_log(ctxp,"NOT", yytext);
+    return NOT;
+}
+
+{INTNUM} {   
+    lex_log(ctxp,"{INTNUM}", yytext);
+    yylval_param->intval = atoi(yytext);
+    return INTNUM;
+}
+
+{STRING} {   
+    lex_log(ctxp,"{STRING}", yytext);
+    memset(ctxp->lex_text, 0, FBS_MAX_STR_CONST);
+    memcpy(ctxp->lex_text, yytext, strlen(yytext));
+    return STRING;
+}
+
+{CMP} {   
+    lex_log(ctxp,"{CMP}", yytext);
+    yylval_param->tokenum = fbs_lex_get_cmp_tokenum(yytext);
+    return COMPARISON;
+}
+
+{OTHER} {   
+    lex_log(ctxp,"{OTHER}", yytext);
+    return (int)*yytext;
+}
 %%

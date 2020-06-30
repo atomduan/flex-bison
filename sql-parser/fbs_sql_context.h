@@ -86,8 +86,8 @@ void fbs_free(void *ptr);
 fbs_symbol * fbs_symbol_create(fbs_ctx *ctxp, int type);
 int fbs_symbol_register(fbs_ctx *ctxp, fbs_symbol *symbol);
 void fbs_symbol_add_child(fbs_symbol *symbol, int child_symbol_id);
-
 char * fbs_str_dup(char * src);
+void lex_log(fbs_ctx *ctxp, char *tkn, char *yt);
 
 #include <fbs_sql_parser.h>
 #endif/*FBS_SQL_CONTEXT*/
