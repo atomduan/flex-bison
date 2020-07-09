@@ -60,10 +60,8 @@ struct fbs_ctx_s {
 struct fbs_symbol_s {
     fbs_ctx *   ctxp;
     int         type; 
-    int *       children; 
-    int         val;
-    void *      yield;
-    int *       chld_ptr; 
+    int *       child; 
+    int *       child_ptr; 
 };
 
 int reentrant_yyparse();

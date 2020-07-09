@@ -125,6 +125,7 @@ COMMENT_LINE_CTNT       .
     fbs_lex_log(ctxp, "{STRING}", yytext);
     memset(ctxp->lex_text, 0, FBS_MAX_STR_CONST);
     memcpy(ctxp->lex_text, yytext, strlen(yytext));
+    //fbs_lex_log(ctxp, "ctxp->lex_text:", ctxp->lex_text);
     return STRING;
 }
 
