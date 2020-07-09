@@ -57,13 +57,11 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %token WHERE
 %token LIKE
 
-%nterm  <symid>     accept
 %nterm  <symid>     sql
 %nterm  <symid>     statement_list
 %nterm  <symid>     statement
 %nterm  <symid>     select_stmt
 %nterm  <symid>     selection
-%nterm  <symid>     scalar_exp_list
 %nterm  <symid>     from_clause
 %nterm  <symid>     where_clause
 %nterm  <symid>     table_ref_list
@@ -72,6 +70,7 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %nterm  <symid>     predicate
 %nterm  <symid>     comparison_predicate
 %nterm  <symid>     like_predicate
+%nterm  <symid>     scalar_exp_list
 %nterm  <symid>     scalar_exp
 %nterm  <symid>     scalar_unit
 %nterm  <symid>     name_ref
@@ -204,10 +203,10 @@ predicate:
     ;
 
 comparison_predicate:
-        scalar_exp[sel] COMPARISON scalar_exp[ser] {
+        scalar_exp[sel] COMPARISON[cmp] scalar_exp[ser] {
             fprintf(ctxp->log, "trans scalar sep\n");
             fprintf(ctxp->log, "trans scalar ser\n");
-            fprintf(ctxp->log, "handle COMPARISON\n");
+            fprintf(ctxp->log, "handle COMPARISON[%d]\n", $[cmp]);
         }
     ;
 
