@@ -8,3 +8,6 @@ select * from personal_cert_20 where personal_cert_id = "46161896182164905";
 #select * from personal_cert_20 where personal_cert_id = "46161896182164905";
 //select * from personal_cert_20 where personal_cert_id = "46161896182164905";
 #select * from personal_cert_20 where personal_cert_id = "46161896182164905";
+select * from personal_cert_30 where personal_cert_id = "46181896182164405";
+select * from personal_cert_23 where personal_cert_id = "46181896182164605";
+select * from personal_cert_60 where personal_cert_id = "46181896182154905";
