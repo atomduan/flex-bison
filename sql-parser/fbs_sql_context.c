@@ -87,5 +87,5 @@ char * fbs_str_dup(char * src)
 
 void fbs_lex_log(fbs_ctx *ctxp, char *tkn, char *yt)
 {
-    fprintf(ctxp->log, "lex>> hit pattern:[%s] --> token:[%s]\n", tkn, yt);
+    //fprintf(ctxp->log, "lex>> hit pattern:[%s] --> token:[%s]\n", tkn, yt);
 }
