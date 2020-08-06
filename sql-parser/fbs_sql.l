@@ -90,6 +90,11 @@ COMMENT_LINE_CTNT       .
     return LIKE;
 }
 
+"AS" {   
+    fbs_lex_log(ctxp, "AS", yytext);
+    return AS;
+}
+
 "SELECT" {   
     fbs_lex_log(ctxp, "SELECT", yytext);
     return SELECT;

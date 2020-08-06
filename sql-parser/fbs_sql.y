@@ -56,6 +56,7 @@ void yyerror(YYLTYPE *yylsp, fbs_ctx *ctxp, char const *msg);
 %token FROM
 %token WHERE
 %token LIKE
+%token AS 
 
 %nterm  <symid>     sql
 %nterm  <symid>     statement_list
@@ -169,6 +170,11 @@ table_ref_list:
 table_ref:
         name_ref[nrf] {
             //fprintf(ctxp->log, "trans name_ref\n");
+        }
+    |   '(' select_stmt[sls] ')' {
+        }
+
+    |   '(' select_stmt[sls] ')' AS name_ref {
         }
     ;
 
