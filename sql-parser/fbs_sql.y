@@ -109,42 +109,30 @@ statement_list:
 
 statement:
         select_stmt[sls] {
-            //fprintf(ctxp->log, "trans select_stmt\n");
         }
     ;
 
 select_stmt:
         SELECT selection[sel] from_clause[fcl] where_clause[wcl] {
-            //fprintf(ctxp->log, "trans selection sel\n");
-            //fprintf(ctxp->log, "trans from_clause fcl\n");
-            //fprintf(ctxp->log, "trans where_clause wcl\n");
-            //fprintf(ctxp->log, "handle SELECT\n");
         }
     ;
 
 selection:
         scalar_exp_list[sel] {
-            //fprintf(ctxp->log, "trans scalar_exp_list\n");
         }
     |   '*' {
-            //fprintf(ctxp->log, "trans *\n");
         }
     ;
 
 scalar_exp_list:
         scalar_exp {
-            //fprintf(ctxp->log, "trans scalar_exp\n");
         }
     |   scalar_exp_list[sel] ',' scalar_exp[sep] {
-            //fprintf(ctxp->log, "trans scalar_exp_list sub_list\n");
-            //fprintf(ctxp->log, "trans scalar_exp\n");
         }
     ;
 
 from_clause:
         FROM table_ref_list[trl] {
-            //fprintf(ctxp->log, "trans table_ref_list\n");
-            //fprintf(ctxp->log, "handle FROM\n");
         }
     ;
 
@@ -153,140 +141,88 @@ where_clause:
             FBS_USE(ctxp);
         }
     |   WHERE search_condition[scd] {
-            //fprintf(ctxp->log, "trans search_condition\n");
         }
     ;
 
 table_ref_list:
         table_ref[trf] {
-            //fprintf(ctxp->log, "trans table_ref\n");
         }
     |   table_ref_list[trl] ',' table_ref[trf] {
-            //fprintf(ctxp->log, "trans table_ref_list\n");
-            //fprintf(ctxp->log, "trans table_ref\n");
         }
     ;
 
 table_ref:
         name_ref[nrf] {
-            //fprintf(ctxp->log, "trans name_ref\n");
-        }
-    |   '(' select_stmt[sls] ')' {
-        }
-
-    |   '(' select_stmt[sls] ')' AS name_ref {
         }
     ;
 
 search_condition:
         search_condition[sdl] OR search_condition[sdr]  {
-            //fprintf(ctxp->log, "trans search_condition sdl\n");
-            //fprintf(ctxp->log, "trans search_condition sdr\n");
-            //fprintf(ctxp->log, "handle OR\n");
         }
     |   search_condition[sdl] AND search_condition[sdr] {
-            //fprintf(ctxp->log, "trans search_condition sdl\n");
-            //fprintf(ctxp->log, "trans search_condition sdr\n");
-            //fprintf(ctxp->log, "handle AND\n");
         }
     |   '(' search_condition[sdt] ')' {
-            //fprintf(ctxp->log, "trans search_condition sdt\n");
-            //fprintf(ctxp->log, "handle QUOTE\n");
         }
     |   predicate[pdt] {
-            //fprintf(ctxp->log, "trans predicate\n");
         }
     ;
 
 predicate:
         comparison_predicate[cpd] {
-            //fprintf(ctxp->log, "trans comparison_predicate\n");
         }
     |   like_predicate[lpd] {
-            //fprintf(ctxp->log, "trans like_predicate\n");
         }
     ;
 
 comparison_predicate:
         scalar_exp[sel] COMPARISON[cmp] scalar_exp[ser] {
-            //fprintf(ctxp->log, "trans scalar sep\n");
-            //fprintf(ctxp->log, "trans scalar ser\n");
-            //fprintf(ctxp->log, "handle COMPARISON[%d]\n", $[cmp]);
         }
     ;
 
 like_predicate:
         scalar_exp[sep] NOT LIKE like_literal[lkl] {
-            //fprintf(ctxp->log, "trans scalar sep\n");
-            //fprintf(ctxp->log, "trans scalar lkl\n");
-            //fprintf(ctxp->log, "handle NOT LIKE\n");
         }
     |   scalar_exp[sep] LIKE like_literal[lkl] {
-            //fprintf(ctxp->log, "trans scalar sep\n");
-            //fprintf(ctxp->log, "trans scalar lkl\n");
-            //fprintf(ctxp->log, "handle LIKE\n");
         }
     ;
 
 scalar_exp:
         scalar_exp[sel] '+' scalar_exp[ser] {
-            //fprintf(ctxp->log, "trans scalar sel\n");
-            //fprintf(ctxp->log, "trans scalar ser\n");
-            //fprintf(ctxp->log, "handle +\n");
         }
     |   scalar_exp[sel] '-' scalar_exp[ser] {
-            //fprintf(ctxp->log, "trans scalar sel\n");
-            //fprintf(ctxp->log, "trans scalar ser\n");
-            //fprintf(ctxp->log, "handle -\n");
         }
     |   scalar_exp[sel] '*' scalar_exp[ser] {
-            //fprintf(ctxp->log, "trans scalar sel\n");
-            //fprintf(ctxp->log, "trans scalar ser\n");
-            //fprintf(ctxp->log, "handle *\n");
         }
     |   scalar_exp[sel] '/' scalar_exp[ser] {
-            //fprintf(ctxp->log, "trans scalar sel\n");
-            //fprintf(ctxp->log, "trans scalar ser\n");
-            //fprintf(ctxp->log, "handle /\n");
         }
     |   '+' scalar_exp[sep] %prec UMINUS {
-            //fprintf(ctxp->log, "handle + UMINUS\n");
         }
     |   '-' scalar_exp[sep] %prec UMINUS {
-            //fprintf(ctxp->log, "handle - UMINUS\n");
         }
     |   '(' scalar_exp[sep] ')' {
-            //fprintf(ctxp->log, "trans scalar_exp quote\n");
         }
     |   scalar_unit[sun] {
-            //fprintf(ctxp->log, "trans scalar_exp unit\n");
         }
     ;
 
 scalar_unit:
         INTNUM[val] {
-            //fprintf(ctxp->log, "reg %d\n", $[val]);
         }
     |   name_ref[nrf] {
-            //fprintf(ctxp->log, "trans name_ref\n");
         }
     ;
 
 name_ref:
         STRING[str] {
-            //fprintf(ctxp->log, "reg_str %s\n", ctxp->lex_text);
         }
     |   name_ref[nrf] '.' STRING {
-            //fprintf(ctxp->log, "reg_str %s\n", ctxp->lex_text);
         }
     ;
 
 like_literal:
         STRING[str] {
-            //fprintf(ctxp->log, "reg_str %s\n", ctxp->lex_text);
         }
     |   INTNUM[val] {
-            //fprintf(ctxp->log, "reg %d\n", $[val]);
         }
     ;
 %%
